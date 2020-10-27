@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../pages/home.dart';
+import '../pages/map.dart';
 
 import '../components/MenuCard.dart';
 
@@ -31,6 +32,7 @@ class _MenuState extends State<Menu> {
                       label: 'Maps',
                       icon: './assets/icons/menu/earth.png',
                       decorationIcon: './assets/icons/menu/earth-decoration.png',
+                      destination: MapWidget(label: "Maps")
                     ),
                   ),
                   Flexible(
