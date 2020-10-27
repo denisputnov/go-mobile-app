@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go/pages/home.dart';
+import 'package:go/pages/menu.dart';
+
+import './utils/default.dart';
 void main() => runApp(Go());
 
 class Go extends StatelessWidget {
@@ -8,8 +10,8 @@ class Go extends StatelessWidget {
     return MaterialApp(
       title: 'Go',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Comfortaa', backgroundColor: Color(0xff212121)),
-      home: HomePage(),
+      theme: ThemeData(fontFamily: 'Comfortaa', backgroundColor: Default.getDefaultBackgroundColor()),
+      home: Menu(),
     );
   }
 }
