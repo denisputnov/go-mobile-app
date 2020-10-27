@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 
 import '../utils/default.dart';
 
@@ -15,26 +14,20 @@ class MenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: Default.getDefaultMargin(),
-      child: OpenContainer(
-        openElevation: 0,
-        closedElevation: 0,
-        closedColor: Default.getDefaultBackgroundColor(),
-        openColor: Default.getDefaultBackgroundColor(),
-        transitionType: ContainerTransitionType.fadeThrough,
-        closedBuilder: (context, openWidget) {
-          return CardContent(
-              startColor: startColor, endColor: endColor, label: label, icon: icon, decorationIcon: decorationIcon);
-        },
-        openBuilder: (context, openWidget) {
-          return Container(
-            child: destination != null ? destination : Center(child: Text('$label content')),
-          );
-        },
-      ),
-      decoration: BoxDecoration(
-        borderRadius: Default.getDefauilBorderRadius(),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
+      },
+      child: Hero(
+        tag: label,
+        child: Container(
+          margin: Default.getDefaultMargin(),
+          child: CardContent(
+              startColor: startColor, endColor: endColor, label: label, icon: icon, decorationIcon: decorationIcon),
+          decoration: BoxDecoration(
+            borderRadius: Default.getDefauilBorderRadius(),
+          ),
+        ),
       ),
     );
   }
@@ -52,37 +45,39 @@ class CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // margin: Default.getDefaultMargin(),
-      padding: Default.getDefaultPadding(),
-      // height: double.infinity,
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            label,
-            style: Default.getDefaultTextStyle(),
-          ),
-          Align(
-            child: Image.asset(icon, width: 40, height: 40),
-            alignment: Alignment.bottomRight,
-          ),
-        ],
-      ),
-      decoration: BoxDecoration(
-        borderRadius: Default.getDefauilBorderRadius(),
-        gradient: LinearGradient(
-          colors: [startColor, endColor],
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
+    return Scaffold(
+      body: Container(
+        // margin: Default.getDefaultMargin(),
+        padding: Default.getDefaultPadding(),
+        // height: double.infinity,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              label,
+              style: Default.getDefaultTextStyle(),
+            ),
+            Align(
+              child: Image.asset(icon, width: 40, height: 40),
+              alignment: Alignment.bottomRight,
+            ),
+          ],
         ),
-        image: DecorationImage(
-          image: AssetImage(decorationIcon),
-          fit: BoxFit.cover,
-          repeat: ImageRepeat.noRepeat,
-          alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: Default.getDefauilBorderRadius(),
+          gradient: LinearGradient(
+            colors: [startColor, endColor],
+            begin: Alignment.bottomRight,
+            end: Alignment.topLeft,
+          ),
+          image: DecorationImage(
+            image: AssetImage(decorationIcon),
+            fit: BoxFit.cover,
+            repeat: ImageRepeat.noRepeat,
+            alignment: Alignment.center,
+          ),
         ),
       ),
     );

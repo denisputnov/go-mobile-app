@@ -10,7 +10,7 @@ class Go extends StatelessWidget {
     return MaterialApp(
       title: 'Go',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Comfortaa', backgroundColor: Default.getDefaultBackgroundColor()),
+      theme: ThemeData(fontFamily: 'Comfortaa', backgroundColor: Default.getDefaultBackgroundColor(), canvasColor: Colors.transparent),
       home: Menu(),
     );
   }

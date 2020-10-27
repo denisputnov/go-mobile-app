@@ -32,9 +32,10 @@ class HomeButton extends StatelessWidget {
             Text(title, style: Default.getDefaultTextStyle(fsz: 20)),
             Expanded(
               child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Icon(Icons.arrow_forward_ios, color: Default.getDefaultIconColor(), size: 30)),
-            )
+                alignment: Alignment.centerRight,
+                child: Icon(Icons.arrow_forward_ios, color: Default.getDefaultIconColor(), size: 30),
+              ),
+            ),
           ],
         ),
       ),
