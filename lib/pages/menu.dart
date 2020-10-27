@@ -6,7 +6,13 @@ import '../components/MenuCard.dart';
 
 import '../utils/default.dart';
 
-class Menu extends StatelessWidget {
+
+class Menu extends StatefulWidget {
+  @override
+  _MenuState createState() => _MenuState();
+}
+
+class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +40,7 @@ class Menu extends StatelessWidget {
                       label: 'Home &\nSettings',
                       icon: './assets/icons/menu/home.png',
                       decorationIcon: './assets/icons/menu/home-decoration.png',
-                      destination: Home(),
+                      destination: Home(label: "Home &\nSettings",),
                     ),
                   ),
                 ],
