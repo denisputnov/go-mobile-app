@@ -8,8 +8,8 @@ class HomeButton extends StatelessWidget {
   String title;
   IconData icon;
   Widget destination;
-  double iconSize;
   String url;
+  double iconSize;
 
   HomeButton({this.title, this.icon, this.iconSize, this.destination, this.url});
 
