@@ -39,8 +39,8 @@ class _HomeState extends State<Home> {
                 NewsSlider(),
                 RegistrationWidget(),
                 HomeButton(title: 'Настройки', icon: Icons.settings, iconSize: 35, destination: Settings()),
-                HomeButton(title: 'Политика конфиденциальности', icon: FontAwesomeIcons.balanceScale, iconSize: 27, destination: Settings()),
-                HomeButton(title: 'О нас', icon: Icons.info_outline, iconSize: 35, destination: Settings()),
+                HomeButton(title: 'Политика конфиденциальности', icon: FontAwesomeIcons.balanceScale, iconSize: 27, url: "https://google.com"),
+                HomeButton(title: 'О нас', icon: Icons.info_outline, iconSize: 35, url: "https://putnov.ru"),
                 SizedBox(height: 10),
                 Text(Application.version(), style: TextStyle(color: Default.getDefaultSubtitleColor(), fontSize: 12))
               ],
