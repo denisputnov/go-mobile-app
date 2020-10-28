@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:go/components/AppBar.dart';
+import 'package:go/components/settings/SettingsCategory.dart';
+import 'package:go/components/settings/SettingsField.dart';
+import 'package:go/components/settings/SettingsFooter.dart';
+
 import 'package:go/utils/default.dart';
 
 class Settings extends StatefulWidget {
@@ -23,54 +27,27 @@ class _SettingsState extends State<Settings> {
         child: Container(
           child: Column(
             children: <Widget>[
-              Container(
-                decoration:
-                    BoxDecoration(color: Default.getDefaultSecondaryColor(), borderRadius: BorderRadius.circular(16)),
-                margin: EdgeInsets.fromLTRB(8, 0, 8, 4),
-                child: ListTile(
-                  title: Text("Настройка 1", style: TextStyle(color: Colors.white)),
-                  trailing: CupertinoSwitch(
-                    trackColor: Colors.grey.withOpacity(0.3),
-                    value: _settingOne,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _settingOne = value;
-                        print(_settingOne);
-                      });
-                    },
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _settingOne = !_settingOne;
-                      print(_settingOne);
-                    });
-                  },
-                ),
-              ),
-              Container(
-                decoration:
-                    BoxDecoration(color: Default.getDefaultSecondaryColor(), borderRadius: BorderRadius.circular(16)),
-                margin: EdgeInsets.fromLTRB(8, 0, 8, 4),
-                child: ListTile(
-                  title: Text("Настройка 2", style: TextStyle(color: Colors.white)),
-                  trailing: CupertinoSwitch(
-                    trackColor: Colors.grey.withOpacity(0.3),
-                    value: _settingTwo,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _settingTwo = value;
-                        print(_settingTwo);
-                      });
-                    },
-                  ),
-                  onTap: () {
-                    setState(() {
-                      _settingTwo = !_settingTwo;
-                      print(_settingTwo);
-                    });
-                  },
-                ),
-              )
+              SettingsCategory(label: "Основные настройки:"),
+              SettingsField(label: "Настройка 1", setting: _settingOne),
+              SettingsField(label: "Настройка 2", setting: _settingTwo),
+              SettingsField(label: "Настройка 3", setting: _settingOne),
+              SettingsField(label: "Настройка 4", setting: _settingTwo),
+              SettingsField(label: "Настройка 5", setting: _settingTwo),
+              SettingsField(label: "Настройка 6", setting: _settingTwo),
+              SettingsCategory(label: "Доп. настройки:"),
+              SettingsField(label: "Настройка 7", setting: _settingTwo),
+              SettingsField(label: "Настройка 8", setting: _settingTwo),
+              SettingsField(label: "Настройка 9", setting: _settingTwo),
+              SettingsField(label: "Настройка 10", setting: _settingOne),
+              SettingsField(label: "Настройка 11", setting: _settingTwo),
+              SettingsField(label: "Настройка 12", setting: _settingTwo),
+              SettingsField(label: "Настройка 13", setting: _settingTwo),
+              SettingsField(label: "Настройка 14", setting: _settingOne),
+              SettingsCategory(label: "Аккаунт:"),
+              SettingsField(label: "Настройка 15", setting: _settingOne),
+              SettingsField(label: "Настройка 16", setting: _settingOne),
+              SettingsField(label: "Настройка 17", setting: _settingTwo),
+              SettingsFooter(),
             ],
           ),
         ),

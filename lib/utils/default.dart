@@ -51,4 +51,8 @@ class Default {
   static Color getDefaultIconColor() {
     return Color(0xff575757);
   }
+
+  static Color getDefaultLinkColor() {
+    return Colors.indigo;
+  }
 }
