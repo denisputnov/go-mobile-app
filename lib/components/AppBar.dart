@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class DefautlAppBar extends StatelessWidget implements PreferredSizeWidget {
+class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool hasBackButton;
   String title;
   Color color;
 
-  DefautlAppBar({this.hasBackButton = true, this.title = '', this.color = Colors.white});
+  DefaultAppBar({this.hasBackButton = true, this.title = '', this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {

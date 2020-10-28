@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../components/AppBar.dart';
 
+import 'package:go/utils/default.dart';
+
 class MapWidget extends StatefulWidget {
   final label;
 
@@ -21,7 +23,9 @@ class _MapWidgetState extends State<MapWidget> {
       tag: label,
       child: Material(
         child: Scaffold(
-          appBar: DefautlAppBar(),
+          appBar: DefaultAppBar(),
+          backgroundColor: Default.getDefaultBackgroundColor(),
+          body: Text('Ку ебать'),
         ),
       ),
     );

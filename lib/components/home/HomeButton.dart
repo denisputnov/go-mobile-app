@@ -9,7 +9,7 @@ class HomeButton extends StatelessWidget {
   Widget destination;
   double iconSize;
 
-  HomeButton({this.title, this.icon, this.iconSize});
+  HomeButton({this.title, this.icon, this.iconSize, this.destination});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,15 @@ class HomeButton extends StatelessWidget {
         child: Row(
           children: <Widget>[
             FaIcon(icon, color: Default.getDefaultIconColor(), size: iconSize),
-            SizedBox(width: Default.getDefaultMargin(onlyValue: true)),
-            Text(title, style: Default.getDefaultTextStyle(fsz: 20)),
+            SizedBox(width: Default.getDefaultMargin(onlyValue: true)*2),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.6,
+              child: Text(
+                title,
+                style: Default.getDefaultTextStyle(fsz: 16),
+                // overflow: TextOverflow.ellipsis
+              ),
+            ),
             Expanded(
               child: Align(
                 alignment: Alignment.centerRight,
@@ -38,6 +45,27 @@ class HomeButton extends StatelessWidget {
             ),
           ],
         ),
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (context, animation, anotrerAnimation) {
+                return destination;
+              },
+              transitionDuration: Duration(milliseconds: 300),
+              transitionsBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation, Widget child) {
+                animation = CurvedAnimation(curve: Curves.easeInOut, parent: animation);
+                return new SlideTransition(
+                  position: new Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(animation),
+                  child: child,
+                );
+              },
+            ),
+          );
+        },
       ),
     );
   }
