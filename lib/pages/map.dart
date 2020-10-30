@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../components/AppBar.dart';
+import '../components/map/GoogleMaps.dart';
+import '../components/map/Search.dart';
+import '../components/map/Filter.dart';
 
 class MapWidget extends StatefulWidget {
   final label;
@@ -15,13 +17,32 @@ class _MapWidgetState extends State<MapWidget> {
   final label;
 
   _MapWidgetState({this.label});
+
   @override
   Widget build(BuildContext context) {
     return Hero(
       tag: label,
       child: Material(
         child: Scaffold(
-          appBar: DefautlAppBar(),
+          resizeToAvoidBottomPadding: false,
+          body: SafeArea(
+            child: Stack(children: [
+              GoogleMaps(),
+              Search(),
+              Container(
+                margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      size: 50,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+              ),
+              Filter(),
+            ]),
+          ),
         ),
       ),
     );
