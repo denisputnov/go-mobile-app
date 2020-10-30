@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../pages/home.dart';
 import '../pages/map.dart';
+import '../pages/games.dart';
 
 import '../components/MenuCard.dart';
 
@@ -68,6 +69,7 @@ class _MenuState extends State<Menu> {
                       label: 'Games',
                       icon: './assets/icons/menu/game.png',
                       decorationIcon: './assets/icons/menu/game-decoration.png',
+                      destination: Games(label: "Games"),
                     ),
                   ),
                 ],
