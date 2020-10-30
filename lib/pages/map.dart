@@ -4,6 +4,8 @@ import '../components/map/GoogleMaps.dart';
 import '../components/map/Search.dart';
 import '../components/map/Filter.dart';
 
+import 'package:go/utils/default.dart';
+
 class MapWidget extends StatefulWidget {
   final label;
 

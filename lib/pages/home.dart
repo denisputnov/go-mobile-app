@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go/utils/application.dart';
 
+import '../pages/settings.dart';
 import '../components/AppBar.dart';
 import '../components/home/NewsSlider.dart';
 import '../components/home/Registration.dart';
 import '../components/home/HomeButton.dart';
 
 import '../utils/default.dart';
+import 'package:go/utils/application.dart';
 
 class Home extends StatefulWidget {
   final label;
@@ -29,7 +30,7 @@ class _HomeState extends State<Home> {
       tag: label,
       child: Material(
         child: Scaffold(
-          appBar: DefautlAppBar(),
+          appBar: DefaultAppBar(),
           backgroundColor: Default.getDefaultBackgroundColor(),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -37,9 +38,9 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 NewsSlider(),
                 RegistrationWidget(),
-                HomeButton(title: 'Settings', icon: Icons.settings, iconSize: 35),
-                HomeButton(title: 'Policy', icon: FontAwesomeIcons.balanceScale, iconSize: 27),
-                HomeButton(title: 'About', icon: Icons.info_outline, iconSize: 35),
+                HomeButton(title: 'Настройки', icon: Icons.settings, iconSize: 35, destination: Settings()),
+                HomeButton(title: 'Политика конфиденциальности', icon: FontAwesomeIcons.balanceScale, iconSize: 27, url: "https://google.com"),
+                HomeButton(title: 'О нас', icon: Icons.info_outline, iconSize: 35, url: "https://putnov.ru"),
                 SizedBox(height: 10),
                 Text(Application.version(), style: TextStyle(color: Default.getDefaultSubtitleColor(), fontSize: 12))
               ],
