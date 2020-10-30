@@ -49,7 +49,7 @@ class HomeButton extends StatelessWidget {
         ),
         onTap: () async {
           url == null
-              ? Navigator.of(context).push(
+              ? await Navigator.of(context).push(
                   PageRouteBuilder(
                     pageBuilder: (context, animation, anotrerAnimation) {
                       return destination;
