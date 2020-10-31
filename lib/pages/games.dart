@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:go/utils/default.dart';
 
 import '../components/games/GamesTopText.dart';
@@ -35,7 +36,9 @@ class _GamesState extends State<Games> {
               children: [
                 Container(
                   width: screenWidth,
-                  padding: EdgeInsets.symmetric(vertical: screenWidth * 0.32, horizontal: screenWidth * 0.15),
+                  padding: EdgeInsets.symmetric(
+                      vertical: screenWidth * 0.32,
+                      horizontal: screenWidth * 0.15),
                   height: screenWidth,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(

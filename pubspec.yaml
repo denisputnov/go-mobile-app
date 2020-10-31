@@ -14,8 +14,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
   google_maps_flutter: ^1.0.3
-
   cupertino_icons: ^0.1.3
   animations: ^1.1.2
   flutter_svg: ^0.19.1
@@ -48,6 +48,10 @@ flutter:
     # Standart user avatar
     - 'assets/icons/avatar.png'
     - 'assets/icons/denis.jpg'
+    # Dictionary
+    - 'assets/icons/smart_dict.jpg'
+    - 'assets/icons/info_dict.jpg'
+
 
 
 
