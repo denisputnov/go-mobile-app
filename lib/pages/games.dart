@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:go/utils/default.dart';
 
 class Games extends StatefulWidget {
@@ -31,19 +32,24 @@ class _GamesState extends State<Games> {
               children: [
                 Container(
                   width: screenWidth,
-                  padding: EdgeInsets.symmetric(vertical: screenWidth * 0.32, horizontal: screenWidth * 0.15),
+                  padding: EdgeInsets.symmetric(
+                      vertical: screenWidth * 0.32,
+                      horizontal: screenWidth * 0.15),
                   height: screenWidth,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(circularRadiusForBackgroundDecoration),
-                        bottomRight: Radius.circular(circularRadiusForBackgroundDecoration),
+                        bottomLeft: Radius.circular(
+                            circularRadiusForBackgroundDecoration),
+                        bottomRight: Radius.circular(
+                            circularRadiusForBackgroundDecoration),
                       ),
                       gradient: LinearGradient(
                           colors: [Color(0xffe11030), Color(0xffb482bf)],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topLeft),
                       image: DecorationImage(
-                        image: AssetImage('./assets/icons/menu/game-decoration.png'),
+                        image: AssetImage(
+                            './assets/icons/menu/game-decoration.png'),
                         fit: BoxFit.fitHeight,
                         repeat: ImageRepeat.noRepeat,
                         alignment: Alignment.center,
@@ -90,11 +96,13 @@ class GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    double cardWidth = screenWidth - Default.getDefaultMargin(onlyValue: true) * 2;
+    double cardWidth =
+        screenWidth - Default.getDefaultMargin(onlyValue: true) * 2;
     double cardHeight = cardWidth * 9 / 16;
 
     return Container(
-      decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+          color: Colors.amber, borderRadius: BorderRadius.circular(16)),
       margin: Default.getDefaultMargin(),
       width: cardWidth,
       height: cardHeight,
@@ -132,6 +140,7 @@ class GameTopText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: TextStyle(color: Colors.white, fontSize: screenWidth * 0.08));
+    return Text(text,
+        style: TextStyle(color: Colors.white, fontSize: screenWidth * 0.08));
   }
 }
