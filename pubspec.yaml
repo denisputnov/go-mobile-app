@@ -49,6 +49,12 @@ flutter:
     - 'assets/icons/avatar.png'
     - 'assets/icons/denis.jpg'
 
+
+
+    - 'assets/icons/coffe.png'
+    - 'assets/icons/vertical.jpg'
+
+    
   fonts:
     - family: Comfortaa
       fonts:

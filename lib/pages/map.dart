@@ -26,6 +26,7 @@ class _MapWidgetState extends State<MapWidget> {
       tag: label,
       child: Material(
         child: Scaffold(
+          backgroundColor: Default.getDefaultBackgroundColor(),
           resizeToAvoidBottomPadding: false,
           body: SafeArea(
             child: Stack(children: [
