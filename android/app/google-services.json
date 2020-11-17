@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "198469682122",
+    "firebase_url": "https://go-mobile-app-caf14.firebaseio.com",
+    "project_id": "go-mobile-app-caf14",
+    "storage_bucket": "go-mobile-app-caf14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198469682122:android:555192db0eedef46818533",
+        "android_client_info": {
+          "package_name": "com.example.go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198469682122-tr94ub4fnqenj09lmkplf97n5e7r12g2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.go",
+            "certificate_hash": "28dd1d34c69f81899290a56edcac48cdbdda168c"
+          }
+        },
+        {
+          "client_id": "198469682122-mpjqsi7hgqjvbp0tic8hac9vah6eb0ku.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOtckiourhSro_S0b3bZtqMBttE8lt_tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198469682122-mpjqsi7hgqjvbp0tic8hac9vah6eb0ku.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
