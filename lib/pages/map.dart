@@ -5,6 +5,8 @@ import '../components/map/Search.dart';
 import '../components/map/Filter.dart';
 import '../components/Back.dart';
 
+import 'package:go/utils/default.dart';
+
 class MapWidget extends StatefulWidget {
   final label;
 

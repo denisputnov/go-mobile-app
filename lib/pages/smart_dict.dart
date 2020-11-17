@@ -3,19 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go/utils/default.dart';
 
 class SmartDict extends StatefulWidget {
-  final label;
-
-  SmartDict({this.label});
-
   @override
-  _SmartDict createState() => _SmartDict(label);
+  _SmartDict createState() => _SmartDict();
 }
 
 class _SmartDict extends State<SmartDict> {
-  final label;
-
-  _SmartDict(this.label);
-
   @override
   Widget build(BuildContext context) {
     return Container(

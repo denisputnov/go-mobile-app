@@ -1,124 +1,114 @@
-import 'package:flutter/material.dart';
-import 'package:go/components/Back.dart';
+import 'dart:ui';
 
-import '../components/Back.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import '../components/AppBar.dart';
+
 import '../pages/smart_dict.dart';
 import '../pages/info_dict.dart';
 
 import 'package:go/utils/default.dart';
 
-class Dict extends StatefulWidget {
-  final label;
-
-  Dict({this.label});
-
+class Dictionary extends StatefulWidget {
   @override
-  _Dict createState() => _Dict(label);
+  _DictionaryState createState() => _DictionaryState();
 }
 
-class _Dict extends State<Dict> {
-  final label;
+class _DictionaryState extends State<Dictionary> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Default.getDefaultBackgroundColor(),
+      appBar: DefaultAppBar(),
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            DisctionaryCard(
+              destination: SmartDict(),
+              imageSrc: 'assets/icons/smart_dict.jpg',
+              startColor: Color(0xff0acffe).withOpacity(0.8),
+              endColor: Color(0xff495aff).withOpacity(0.8),
+              label: "Куда мне поехать?\nПомощник поможет выбрать путь!",
+            ),
+            DisctionaryCard(
+              destination: InfoDict(),
+              imageSrc: 'assets/icons/info_dict.jpg',
+              startColor: Color(0xff9be15d).withOpacity(0.4),
+              endColor: Color(0xff9be15d).withOpacity(0.4),
+              label: "Информация о разных туристических местах",
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-  _Dict(this.label);
+class DisctionaryCard extends StatelessWidget {
+  Widget destination;
+  String imageSrc;
+  Color startColor;
+  Color endColor;
+  String label;
+  Color fontColor;
+  double fontSize;
+
+  DisctionaryCard(
+      {this.destination, this.imageSrc, this.startColor, this.endColor, this.label, this.fontColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-        tag: label,
-        child: Material(
-            child: Scaffold(
-                backgroundColor: Default.getDefaultBackgroundColor(),
-                body: SafeArea(
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Stack(children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          SmartDict(label: "SmartDict")));
-                            },
-                            child: Container(
-                              margin: EdgeInsets.only(right: 20.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return LinearGradient(
-                                            colors: [
-                                          Color(0x07D95BA),
-                                          Color(0xff8E86BF)
-                                        ],
-                                            stops: [
-                                          0.0,
-                                          1.0
-                                        ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter)
-                                        .createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcATop,
-                                  child: Image.asset(
-                                    './assets/icons/smart_dict.jpg',
-                                    repeat: ImageRepeat.noRepeat,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          InfotDict(label: "InfoDict")));
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: ShaderMask(
-                                  shaderCallback: (Rect bounds) {
-                                    return LinearGradient(
-                                            colors: [
-                                          Color(0x0FFFFFF),
-                                          Color(0xff9720C0)
-                                        ],
-                                            stops: [
-                                          0.0,
-                                          1.0
-                                        ],
-                                            begin: Alignment.topCenter,
-                                            end: Alignment.bottomCenter)
-                                        .createShader(bounds);
-                                  },
-                                  blendMode: BlendMode.srcATop,
-                                  child: Image.asset(
-                                    './assets/icons/info_dict.jpg',
-                                    repeat: ImageRepeat.noRepeat,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Back(),
-                    ]),
+    fontSize = MediaQuery.of(context).size.width / 20;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
+      },
+      child: Container(
+        height: double.infinity,
+        width: MediaQuery.of(context).size.width * 0.8,
+        margin: Default.getDefaultMargin(),
+        child: Builder(
+          builder: (BuildContext context) {
+            return Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: Default.getDefauilBorderRadius(),
+                  child: ShaderMask(
+                    shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                        colors: [startColor, endColor],
+                        stops: [0, 1],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ).createShader(bounds);
+                    },
+                    blendMode: BlendMode.srcATop,
+                    child: Image.asset(
+                      imageSrc,
+                      repeat: ImageRepeat.noRepeat,
+                      fit: BoxFit.cover,
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                    ),
                   ),
-                ))));
+                ),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: Default.getDefaultPadding(onlyValue: true) * 2),
+                    child: Text(
+                      label,
+                      style: TextStyle(color: fontColor, fontSize: fontSize),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 }

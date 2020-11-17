@@ -2,20 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:go/utils/default.dart';
 
-class InfotDict extends StatefulWidget {
-  final label;
-
-  InfotDict({this.label});
-
+class InfoDict extends StatefulWidget {
   @override
-  _InfotDict createState() => _InfotDict(label);
+  _InfoDict createState() => _InfoDict();
 }
 
-class _InfotDict extends State<InfotDict> {
-  final label;
-
-  _InfotDict(this.label);
-
+class _InfoDict extends State<InfoDict> {
   @override
   Widget build(BuildContext context) {
     return Container(

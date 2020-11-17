@@ -61,9 +61,7 @@ class _MenuState extends State<Menu> {
                       label: 'Dictionary',
                       icon: './assets/icons/menu/book.png',
                       decorationIcon: './assets/icons/menu/book-decoration.png',
-                      destination: Dict(
-                        label: "Dict",
-                      ),
+                      destination: Dictionary(),
                     ),
                   ),
                   Flexible(

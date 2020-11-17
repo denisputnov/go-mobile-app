@@ -23,11 +23,23 @@ dependencies:
   font_awesome_flutter: ^8.10.0
   url_launcher: ^5.7.8
 
+  firebase_core : ^0.5.0
+  firebase_auth: ^0.18.3
+  google_sign_in: ^4.5.6
+
+  # firebase_database: ^4.3.0
+  shared_preferences: ^0.5.12+4
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.4
 
+flutter_icons:
+  image_path: "assets/icons/go-icon.png"
+  android: true
+  ios: true
 
 flutter:
   uses-material-design: true
@@ -51,6 +63,8 @@ flutter:
     # Dictionary
     - 'assets/icons/smart_dict.jpg'
     - 'assets/icons/info_dict.jpg'
+    # Google logo 
+    - 'assets/icons/home/google_logo.png'
 
 
 
