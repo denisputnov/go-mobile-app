@@ -31,19 +31,18 @@ class HomeButton extends StatelessWidget {
           children: <Widget>[
             FaIcon(icon, color: Default.getDefaultIconColor(), size: iconSize),
             SizedBox(width: Default.getDefaultMargin(onlyValue: true) * 2),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.6,
-              child: Text(
-                title,
-                style: Default.getDefaultTextStyle(fsz: 16),
-                // overflow: TextOverflow.ellipsis
+            Expanded(
+              child: SizedBox(
+                child: Text(
+                  title,
+                  style: Default.getDefaultTextStyle(fsz: 16),
+                  // overflow: TextOverflow.ellipsis
+                ),
               ),
             ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Icon(Icons.arrow_forward_ios, color: Default.getDefaultIconColor(), size: 30),
-              ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.arrow_forward_ios, color: Default.getDefaultIconColor(), size: 30),
             ),
           ],
         ),

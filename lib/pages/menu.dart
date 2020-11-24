@@ -28,13 +28,13 @@ class _MenuState extends State<Menu> {
                 children: <Widget>[
                   Flexible(
                     child: MenuCard(
-                        startColor: Color(0xff007cda),
-                        endColor: Color(0xff23b4ed),
-                        label: 'Maps',
-                        icon: './assets/icons/menu/earth.png',
-                        decorationIcon:
-                            './assets/icons/menu/earth-decoration.png',
-                        destination: MapWidget(label: "Maps")),
+                      startColor: Color(0xff007cda),
+                      endColor: Color(0xff23b4ed),
+                      label: 'Maps',
+                      icon: './assets/icons/menu/earth.png',
+                      decorationIcon: './assets/icons/menu/earth-decoration.png',
+                      destination: MapWidget(label: "Maps"),
+                    ),
                   ),
                   Flexible(
                     child: MenuCard(
@@ -43,9 +43,7 @@ class _MenuState extends State<Menu> {
                       label: 'Home &\nSettings',
                       icon: './assets/icons/menu/home.png',
                       decorationIcon: './assets/icons/menu/home-decoration.png',
-                      destination: Home(
-                        label: "Home &\nSettings",
-                      ),
+                      destination: Home(label: "Home &\nSettings"),
                     ),
                   ),
                 ],

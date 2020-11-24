@@ -1,3 +1,4 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:go/utils/default.dart';
 
@@ -53,13 +54,18 @@ class _GamesState extends State<Games> {
                       alignment: Alignment.center,
                     ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GameTopText('играй', screenWidth),
-                      GameTopText('развлекайся', screenWidth),
-                      GameTopText('получай скидки', screenWidth),
-                    ],
+                  child: DelayedDisplay(
+                    delay: Duration(milliseconds: 250),
+                    fadingDuration: Duration(milliseconds: 250),
+                    slidingBeginOffset: Offset(0, -0.10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GameTopText('играй', screenWidth),
+                        GameTopText('развлекайся', screenWidth),
+                        GameTopText('получай скидки', screenWidth),
+                      ],
+                    ),
                   ),
                 ),
                 GamesAppBar(),
