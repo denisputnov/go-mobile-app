@@ -1,9 +1,11 @@
+import 'package:delayed_display/delayed_display.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../utils/variables/userdata.dart' as userdata;
 import '../../utils/default.dart';
 import '../../utils/auth.dart';
 
@@ -13,10 +15,10 @@ class RegistrationWidget extends StatefulWidget {
 }
 
 class _RegistrationWidgetState extends State<RegistrationWidget> {
-  bool isAuthorized = false;
-  Image userPhoto = Image.asset('./assets/icons/denis.jpg');
-  String username = "Denis Putnov";
-  String email = "your@email.com";
+  bool isAuthorized = userdata.isAuthorized;
+  Image userPhoto = userdata.userPhoto;
+  String username = userdata.username;
+  String email = userdata.email;
 
   User user;
 
@@ -95,29 +97,40 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                       },
                     ),
                   ),
-                  Container(
-                    padding: Default.getDefaultPadding(),
-                    child: Row(
-                      children: <Widget>[
-                        ClipRRect(child: userPhoto, borderRadius: BorderRadius.circular(72)),
-                        SizedBox(width: Default.getDefaultPadding(onlyValue: true)),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(username, style: TextStyle(color: Colors.white, fontSize: 20)),
-                            SizedBox(height: Default.getDefaultPadding(onlyValue: true) * 2 / 3),
-                            Text(
-                              email,
-                              style: TextStyle(
-                                color: Default.getDefaultSubtitleColor(),
+                  DelayedDisplay(
+                    slidingBeginOffset: Offset(0.03, 0),
+                    delay: Duration(milliseconds: 200),
+                    fadingDuration: Duration(milliseconds: 200),
+                    child: Container(
+                      padding: Default.getDefaultPadding(),
+                      child: Row(
+                        children: <Widget>[
+                          ClipRRect(child: userPhoto, borderRadius: BorderRadius.circular(72)),
+                          SizedBox(width: Default.getDefaultPadding(onlyValue: true)),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                username,
+                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                overflow: TextOverflow.fade,
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              SizedBox(height: Default.getDefaultPadding(onlyValue: true) / 3),
+                              Text(
+                                email,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Default.getDefaultSubtitleColor(),
+                                ),
+                                overflow: TextOverflow.fade,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  )
                 ],
               ),
             )
@@ -131,8 +144,11 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     children: <Widget>[
                       SvgPicture.asset('./assets/icons/sad_face.svg'),
                       SizedBox(height: 20),
-                      Text('Вы не авторизованы. Нажмите, чтобы авторизоваться.',
-                          textAlign: TextAlign.center, style: TextStyle(color: Colors.white))
+                      Text(
+                        'Вы не авторизованы. Нажмите, чтобы авторизоваться.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      )
                     ],
                   ),
                   onTap: this.signInGoogle),

@@ -29,6 +29,7 @@ dependencies:
 
   # firebase_database: ^4.3.0
   shared_preferences: ^0.5.12+4
+  delayed_display: ^1.1.0
 
 
 dev_dependencies:
@@ -65,12 +66,12 @@ flutter:
     - 'assets/icons/info_dict.jpg'
     # Google logo 
     - 'assets/icons/home/google_logo.png'
-
+    # Avatar Placeholder
+    - 'assets/icons/avatar-placeholder.jpg'
 
 
 
     - 'assets/icons/coffe.png'
-    - 'assets/icons/vertical.jpg'
 
     
   fonts:

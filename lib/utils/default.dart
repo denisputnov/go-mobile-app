@@ -13,9 +13,9 @@ class Default {
   static dynamic getDefaultBoxShadow() {
     return [
       BoxShadow(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withOpacity(0.3),
         blurRadius: 8,
-        spreadRadius: 2,
+        spreadRadius: 1,
       ),
     ];
   }
