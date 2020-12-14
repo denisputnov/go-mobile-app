@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go/pages/gameconstructor.dart';
 
-import '../../utils/default.dart';
+import '../../utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class NewsSlider extends StatelessWidget {
   @override
@@ -94,12 +95,15 @@ class SliderCard extends StatelessWidget {
           : () {},
       child: Container(
         width: MediaQuery.of(context).size.width * 0.75,
-        margin: Default.getDefaultMargin(),
-        decoration: BoxDecoration(borderRadius: Default.getDefauilBorderRadius()),
+        margin: EdgeInsets.all(context.watch<GoTheme>().margin),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
+          boxShadow: context.watch<GoTheme>().boxShadow,
+        ),
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: Default.getDefauilBorderRadius(),
+              borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
               child: ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
@@ -120,7 +124,7 @@ class SliderCard extends StatelessWidget {
               ),
             ),
             Container(
-              padding: Default.getDefaultPadding(),
+              padding: EdgeInsets.all(context.watch<GoTheme>().padding),
               child: Center(
                 child: Text(
                   label,

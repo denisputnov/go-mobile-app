@@ -1,6 +1,7 @@
-import 'package:go/utils/default.dart';
+import 'package:go/utils/gotheme.dart';
 import 'package:go/utils/launchUrl.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SettingsFooterComponent extends StatelessWidget {
   String label;
@@ -12,13 +13,13 @@ class SettingsFooterComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: Default.getDefaultMargin(onlyValue: true)),
+      margin: EdgeInsets.symmetric(vertical: context.watch<GoTheme>().margin),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(label, style: TextStyle(color: Default.getDefaultSubtitleColor(), fontSize: 12)),
+          Text(label, style: TextStyle(color: context.watch<GoTheme>().subtitleColor, fontSize: 12)),
           GestureDetector(
-            child: Text(buttonLabel, style: TextStyle(color: Default.getDefaultLinkColor(), fontSize: 12)),
+            child: Text(buttonLabel, style: TextStyle(color: context.watch<GoTheme>().linkColor, fontSize: 12)),
             onTap: () => launchUrl(url),
           ),
         ],

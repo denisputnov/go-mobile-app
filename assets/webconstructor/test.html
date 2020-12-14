@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        class Dot {
+            constructor(sectionId, connectedWith) {
+                this.sectionId = sectionId;
+                this.id = Date.now();
+                // this.id = id;
+                this.connectedWith = connectedWith;
+                // this.connectedWith = connectedWith;
+            }
+        }
+         var dots = {
+            0: { 
+                'dots': [
+                    new Dot(0, null),
+                ]
+            },
+            1: { 
+                'dots': [
+                    new Dot(1, 1),
+                    new Dot(1, 2),
+                ]
+            },
+            2: { 
+                'dots': [
+                    new Dot(2, 3),
+                    new Dot(2, 4),
+                    new Dot(2, 5),
+                ]
+            },
+            3: { 
+                'dots': [
+                    new Dot(3, 6),
+                    new Dot(3, 7),
+                    new Dot(3, 8),
+                    new Dot(3, 9),
+                ]
+            },
+            4: { 
+                'dots': [
+                    new Dot(4, 10),
+                    new Dot(4, 11),
+                    new Dot(4, 12),
+                    new Dot(4, 13),
+                ]
+            },
+        }
+        function calculateCords() {
+            let deviceWidth = window.innerWidth;
+            let sectionHeight = 0.3 * deviceWidth;
+            let halfAnSectionHeight = sectionHeight / 2;
+
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                let group = dots[i]['dots'];
+                let dotsAmount = group.length;
+                for (let j = 0; j < group.length; j++) {
+                    dots[i]['dots'][j].x = deviceWidth / (dotsAmount + 1) * (j + 1); 
+                    dots[i]['dots'][j].y = halfAnSectionHeight + sectionHeight * i;
+                }
+            }
+        }
+        calculateCords();
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

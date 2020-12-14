@@ -1,13 +1,14 @@
 import "package:go/components/settings/SettingsFooterComponent.dart";
 import 'package:flutter/material.dart';
-import 'package:go/utils/default.dart';
+import 'package:go/utils/gotheme.dart';
 import 'package:go/utils/application.dart';
+import 'package:provider/provider.dart';
 
 class SettingsFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: Default.getDefaultMargin(onlyValue: true) * 2),
+      margin: EdgeInsets.symmetric(vertical: context.watch<GoTheme>().margin * 2),
       width: MediaQuery.of(context).size.width,
       child: Column(
         children: [
@@ -22,4 +23,3 @@ class SettingsFooter extends StatelessWidget {
     );
   }
 }
-

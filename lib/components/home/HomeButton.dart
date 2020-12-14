@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go/utils/launchUrl.dart';
 
-import '../../utils/default.dart';
+import '../../utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class HomeButton extends StatelessWidget {
   String title;
@@ -17,32 +18,36 @@ class HomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 70,
-      padding: Default.getDefaultPadding(),
-      margin: Default.getDefaultMargin(),
+      padding: EdgeInsets.all(context.watch<GoTheme>().padding),
+      margin: EdgeInsets.all(context.watch<GoTheme>().margin),
       decoration: BoxDecoration(
-        boxShadow: Default.getDefaultBoxShadow(),
-        color: Default.getDefaultSecondaryColor(),
-        borderRadius: Default.getDefauilBorderRadius(),
+        boxShadow: context.watch<GoTheme>().boxShadow,
+        color: context.watch<GoTheme>().secondaryColor,
+        borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
       ),
       child: InkWell(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         child: Row(
           children: <Widget>[
-            FaIcon(icon, color: Default.getDefaultIconColor(), size: iconSize),
-            SizedBox(width: Default.getDefaultMargin(onlyValue: true) * 2),
+            FaIcon(icon, color: context.watch<GoTheme>().iconColor, size: iconSize),
+            SizedBox(width: context.watch<GoTheme>().margin * 2),
             Expanded(
               child: SizedBox(
                 child: Text(
                   title,
-                  style: Default.getDefaultTextStyle(fsz: 16),
+                  style: TextStyle(
+                    color: context.watch<GoTheme>().textColor,
+                    fontSize: MediaQuery.of(context).size.width / 25,
+                    fontWeight: FontWeight.w400,
+                  ),
                   // overflow: TextOverflow.ellipsis
                 ),
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_forward_ios, color: Default.getDefaultIconColor(), size: 30),
+              child: Icon(Icons.arrow_forward_ios, color: context.watch<GoTheme>().iconColor, size: 30),
             ),
           ],
         ),

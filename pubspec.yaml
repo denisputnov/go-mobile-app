@@ -30,7 +30,15 @@ dependencies:
   # firebase_database: ^4.3.0
   shared_preferences: ^0.5.12+4
   delayed_display: ^1.1.0
+  flutter_staggered_animations: ^0.1.2
 
+  flutter_circle_color_picker: ^0.2.0
+  image_picker: ^0.6.7+11
+
+  provider: ^4.3.2+3
+  
+
+  webview_flutter: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +54,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    - 'assets/webconstructor/'
+
+    
     # assets for menu screen
     - 'assets/icons/menu/earth.png' 
     - 'assets/icons/menu/home.png'

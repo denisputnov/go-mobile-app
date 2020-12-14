@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./source/css/style.min.css">
+    <title>Конструктор</title>
+    <script>
+        function counterWrapper() {
+            let counter = 0;
+            return function() {
+                return counter++;
+            };
+        }
+
+        var getIdForDot = counterWrapper(); 
+
+        class Bot {
+            constructor(token) {
+                this.base_url = `https://api.telegram.org/bot${token}`
+                this._request = new XMLHttpRequest()
+            }
+            /**
+            * 
+            * @param {object} params - params for message {chat_id, text}
+            */
+            sendMessage(params) {
+                this._request.open('POST', `${this.base_url}/sendMessage?chat_id=${params.chat_id}&text=${params.text}&parce_mode=html`)
+                this._request.send()
+            }
+        }
+
+        class Dot {
+            constructor(sectionId, parent) {
+                this.sectionId = sectionId;
+                this.id = getIdForDot();
+                this.parent = parent;
+                this.children = []
+                this.x = 0;
+                this.y = 0;
+                // this.connectedWith = connectedWith;
+            }
+
+            constructConnections() {
+                if (this.children.length === 0) return;
+                let $connections = document.getElementById('connections');
+                // console.log(this.children);
+                for (let childId of this.children) {
+                    let child = getDotById(childId);
+                    
+                    let deviceWidth = window.innerWidth;
+                    let sectionHeight = deviceWidth * 0.3;
+                    try {
+                        var additionalX = child.x;
+                        var additionalY = this.y + sectionHeight * 0.3;
+                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="#FF8181" fill="transparent" stroke-width="4" />`;
+                    } catch (error) {
+                        botprint(error);
+                    }
+                    // let $path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+                    // $path.setAttribute('id', childId);
+                    // $path.setAttribute('d', `M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}`);
+                    // $path.setAttribute('stroke', 'red');
+                    // $path.setAttribute('fill', 'transparent');
+                    // $path.setAttribute('stroke-width', '5');
+
+                    // console.log($path);
+                    // $connections.appendChild($path);
+                    $path !== undefined ? $connections.insertAdjacentHTML('beforeend', $path) : null;
+                }
+                rerender();
+            }
+        }
+        
+        function getDotById(dotId) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) return dots[i]['dots'][j];
+                }
+            }
+        }
+
+        var bot = new Bot('1096828547:AAHD7G8ZMTQ3FsU_4cQj6HQG-rWVMsrzUrg');
+        var botprint = (string) => bot.sendMessage({chat_id: 587125336, text: string});
+
+        var dots = {
+            0: { 
+                'dots': [
+                    new Dot(0, null),
+                ]
+            },
+            // 1: { 
+            //     'dots': [
+            //         new Dot(1, 1),
+            //         new Dot(1, 2),
+            //     ]
+            // },
+            // 2: { 
+            //     'dots': [
+            //         new Dot(2, 3),
+            //         new Dot(2, 4),
+            //         new Dot(2, 5),
+            //     ]
+            // },
+            // 3: { 
+            //     'dots': [
+            //         new Dot(3, 6),
+            //         new Dot(3, 7),
+            //         new Dot(3, 8),
+            //         new Dot(3, 9),
+            //     ]
+            // },
+            // 4: { 
+            //     'dots': [
+            //         new Dot(4, 10),
+            //         new Dot(4, 11),
+            //         new Dot(4, 12),
+            //         new Dot(4, 13),
+            //     ]
+            // },
+        }
+
+        // var dots = {"0":{"dots":[{"sectionId":0,"id":0,"parent":null,"children":[1,2,3],"x":196.5,"y":58.949999999999996}]},"1":{"dots":[{"sectionId":1,"id":1,"parent":0,"children":[],"x":98.25,"y":176.85},{"sectionId":1,"id":2,"parent":0,"children":[],"x":196.5,"y":176.85},{"sectionId":1,"id":3,"parent":0,"children":[4,5,6],"x":294.75,"y":176.85}]},"2":{"dots":[{"sectionId":2,"id":4,"parent":3,"children":[],"x":98.25,"y":294.75},{"sectionId":2,"id":5,"parent":3,"children":[],"x":196.5,"y":294.75},{"sectionId":2,"id":6,"parent":3,"children":[7,8,9],"x":294.75,"y":294.75}]},"3":{"dots":[{"sectionId":3,"id":7,"parent":6,"children":[],"x":98.25,"y":412.65},{"sectionId":3,"id":8,"parent":6,"children":[],"x":196.5,"y":412.65},{"sectionId":3,"id":9,"parent":6,"children":[10,11,12],"x":294.75,"y":412.65}]},"4":{"dots":[{"sectionId":4,"id":10,"parent":9,"children":[],"x":98.25,"y":530.55},{"sectionId":4,"id":11,"parent":9,"children":[],"x":196.5,"y":530.55},{"sectionId":4,"id":12,"parent":9,"children":[13,14,15],"x":294.75,"y":530.55}]},"5":{"dots":[{"sectionId":5,"id":13,"parent":12,"children":[],"x":131,"y":648.45},{"sectionId":5,"id":14,"parent":12,"children":[],"x":262,"y":648.45},{"sectionId":5,"id":15,"parent":12,"children":[]}]}};
+
+        var numberOfSections = 0;      
+        function init() {
+            var app = document.querySelector('#app');
+            Object.keys(dots).forEach(() => addSection());
+        }
+        
+        // add section with dots if they are or add empty section 
+        function addSection(calledFromSectionId = -1) {
+            if (calledFromSectionId === -1 || calledFromSectionId + 1 === numberOfSections) {
+                let $section = document.createElement('section');
+                try {
+                    let $sectionDots = dots[numberOfSections]['dots'];
+                    
+                    $sectionDots.forEach(dot => {
+                        let localDot = document.createElement('div');
+                        
+                        localDot.id = dot.id;
+                        localDot.classList.add('dot');
+                        localDot.classList.add('standart');
+                        localDot.addEventListener('click', () => {
+                            CalledDotId.postMessage(`${dot.id}`);
+                            SectionId.postMessage(`${dot.sectionId}`);
+                            Controller.postMessage('openBottomSheet');
+                        });                        
+                        $section.appendChild(localDot);
+                    });
+                    
+                    } catch (error) {}
+
+                $section.id = numberOfSections++;
+
+                app.appendChild($section);
+            }
+        }
+        
+        function removeSection(sectionId) {
+            document.getElementById(sectionId).remove();
+        }
+        
+        function addDot(sectionId, calledDotId) {
+            addSection(sectionId - 1);
+            try {
+                dots[sectionId]['dots'];
+            } catch (error) {
+                dots[sectionId] = {
+                    'dots': [],
+                }
+            }
+            try {
+                let newDot = new Dot(sectionId, calledDotId);
+                dots[sectionId]['dots'].push(newDot);   
+
+                for (let i = 0; i < dots[sectionId - 1]['dots'].length; i++) {
+                    if (dots[sectionId - 1]['dots'][i].id === calledDotId) {
+                        if (dots[sectionId - 1]['dots'].indexOf(dots[sectionId - 1]['dots'][i]) >= dots[sectionId - 1]['dots'].length / 2) {
+                            dots[sectionId - 1]['dots'][i].children.push(newDot.id);
+                        } else {
+                            dots[sectionId - 1]['dots'][i].children.unshift(newDot.id);
+                        }
+                        botprint(JSON.stringify(dots));
+                    }
+                }
+
+                calculateCords();
+                handleConnections();
+                rerender();
+            } catch (error) {
+                botprint(error);
+            }
+        }
+        
+        function removeDot(sectionId, dotId) {
+            if(sectionId === 0) return;
+            if (dots[sectionId]['dots'].length == 1) {
+                for (let id = sectionId; id < numberOfSections; id++) {
+                    delete dots[id];
+                    removeSection(id);
+                }
+            } else if (sectionId + 1 < numberOfSections) {
+                for (let i = 0; i < dots[sectionId]['dots'].length; i++) {
+                    if(dots[sectionId]['dots'][i].id === dotId) {
+                        let deletedDotId = dots[sectionId]['dots'][i].id; 
+                        removeChildrens(sectionId + 1, deletedDotId);
+                        dots[sectionId]['dots'].splice(i, 1);
+                    }
+                }
+            } else {
+                for (let i = 0; i < dots[sectionId]['dots'].length; i++) {
+                    if (dots[sectionId]['dots'][i].id === dotId) {
+                        dots[sectionId]['dots'].splice(i, 1);
+                    }
+                }
+            }
+            calculateCords();
+            // try{
+            handleConnections();
+            // } catch (error) {
+            //     botprint(error);
+            // }
+            rerender();
+        }
+
+        function removeChildrens(sectionId, parentId) {
+            let startSectionLenght = dots[sectionId]['dots'].length;
+            for(let i = 0; i < startSectionLenght; i++) {
+                // try to delete children of a current child
+                dots[sectionId]['dots'].forEach((dot) => {
+                    try {
+                        removeChildrens(sectionId + 1, dot.id);
+                    } catch {}
+                });
+                // delete childrens from current section
+                dots[sectionId]['dots'] = dots[sectionId]['dots'].filter(dot => dot.parent != parentId);
+            }
+            if (dots[sectionId]['dots'].length === 0) {
+                delete dots[sectionId];
+                removeSection(sectionId);
+            }
+        } 
+
+        function calculateCords() {
+            let deviceWidth = window.innerWidth;
+            let sectionHeight = 0.3 * deviceWidth;
+            let halfAnSectionHeight = sectionHeight / 2;
+
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                let group = dots[i]['dots'];
+                let dotsAmount = group.length;
+                for (let j = 0; j < group.length; j++) {
+                    dots[i]['dots'][j].x = deviceWidth / (dotsAmount + 1) * (j + 1);
+                    // let koeff = group.length * 10;
+                    // if ( j < group.length / 2) dots[i]['dots'][j].x -= deviceWidth / 200 * j;
+                    // if ( j > group.length / 2 ) dots[i]['dots'][j].x += deviceWidth / 200 * j;
+                    dots[i]['dots'][j].y = halfAnSectionHeight + sectionHeight * i;
+                    // let $dot = document.querySelector(`#${dots[i]['dots'][j].id} .dot`);
+                    // console.log(dots[i]['dots'][j].id);
+                    // let $dot = document.getElementsByClassName('dot')[dots[i]['dots'][j].id];
+                    // console.log($dot);
+                    // console.log(1);
+                    // let dotpos = $dot.getBoundingClientRect();
+                    // console.log(2);
+                    // console.log(dotpos);
+                    // dots[i]['dots'][j].x = (dotpos.right - dotpos.left) / 2;
+                    // dots[i]['dots'][j].y = (dotpos.bottom - dotpos.top)/2;
+                    // console.log(dots[i]['dots'][j]);
+                }
+            }
+        }
+        
+        function handleConnections() {
+            // document.getElementById('connections').remove();
+            document.body.lastChild.remove();
+            // $svg.remove();
+            app.insertAdjacentHTML('afterend', '<svg width="100%" height="100%" id="connections"></svg>');
+            // let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            // svg.setAttribute('id', 'connections');
+            // svg.setAttribute('width', '100%');
+            // svg.setAttribute('height', '100%');
+            // document.body.appendChild(svg);
+            let $connections = document.getElementById('connections');
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    dots[i]['dots'][j].constructConnections();
+                }
+            }
+        }
+        
+        // function handleDotEvents() {
+        //     let $dots = document.querySelectorAll('.dot');
+        //     $dots.forEach((dot) => {
+        //         dot.addEventListener('click', () => addSection(dot.sectionId));
+        //     })
+        // }
+        
+        function rerender() {
+            numberOfSections = 0;
+            app.innerHTML = '';
+            init();
+        }
+
+        
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #313131;
+        }
+        #app {
+            z-index: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: inherit;
+            height: inherit;
+        }
+
+        #connections {
+            z-index: -10;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+
+        path {
+            transition: d 1s ease;
+        }
+
+        section {
+            width: inherit;
+            height: 30vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+
+        /* section:nth-child(odd) {
+            background-color: #2D2D2D;
+        }
+
+        section:nth-child(even) {
+            background-color: #313131;
+        } */
+        
+        .dot {
+            margin: auto 0;
+            width: 0.1;
+            height: 0.1;
+        }
+        .standart {
+            position: relative;
+        }
+        .standart::after {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #FF8181;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body onload="init()">
+    <main id="app"></main>
+</body>
+</html>

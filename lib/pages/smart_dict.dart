@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go/components/AppBar.dart';
 
-import 'package:go/utils/default.dart';
+import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class SmartDict extends StatefulWidget {
   String imageSrc;
@@ -36,20 +37,20 @@ class _SmartDictContentState extends State<SmartDictContent> {
       Container(
         width: MediaQuery.of(context).size.width,
         height: 80,
-        margin: Default.getDefaultMargin(),
+        margin: EdgeInsets.all(context.watch<GoTheme>().margin),
         child: Scaffold(
           appBar: DefaultAppBar(),
         ),
       ),
     ];
-    
+
     return Container(
       child: ListView.builder(
         physics: BouncingScrollPhysics(),
         itemCount: questions.length,
         itemBuilder: (context, index) {
           return Container(
-            padding: index != 0 ? EdgeInsets.symmetric(horizontal: Default.getDefaultPadding(onlyValue: true)) : null,
+            padding: index != 0 ? EdgeInsets.symmetric(horizontal: context.watch<GoTheme>().padding) : null,
             child: Wrap(
               children: [questions[index]],
             ),
@@ -73,19 +74,19 @@ class _SmartDictBackgroundState extends State<SmartDictBackground> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Default.getDefaultBackgroundColor(),
+      backgroundColor: context.watch<GoTheme>().backgroundColor,
       // appBar: DefaultAppBar(),
       body: SafeArea(
         child: Container(
           height: double.infinity,
           width: double.infinity,
-          margin: Default.getDefaultMargin(),
+          margin: EdgeInsets.all(context.watch<GoTheme>().margin),
           child: Stack(
             children: [
               Opacity(
                 opacity: 0.4,
                 child: ClipRRect(
-                  borderRadius: Default.getDefauilBorderRadius(),
+                  borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
                   child: ShaderMask(
                     shaderCallback: (Rect bounds) {
                       return LinearGradient(
