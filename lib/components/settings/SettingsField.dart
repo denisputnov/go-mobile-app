@@ -32,7 +32,7 @@ class _SettingsFieldState extends State<SettingsField> {
         child: Row(
           children: [
             Expanded(
-              child: Text(widget.label, style: TextStyle(color: Colors.white)),
+              child: Text(widget.label, style: TextStyle(color: context.watch<GoTheme>().textColor)),
             ),
             CupertinoSwitch(
               trackColor: Colors.grey.withOpacity(0.3),

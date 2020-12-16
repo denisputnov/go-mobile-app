@@ -76,8 +76,11 @@ class FAB extends StatelessWidget {
       },
       backgroundColor: context.watch<GoTheme>().secondaryColor,
       elevation: 3,
-      label: Text("Пройти далее"),
-      icon: Icon(Icons.watch_later),
+      label: Text(
+        "Пройти далее",
+        style: TextStyle(color: context.watch<GoTheme>().textColor),
+      ),
+      icon: Icon(Icons.watch_later, color: context.watch<GoTheme>().textColor),
     );
   }
 }
@@ -220,7 +223,7 @@ class CanNotAddGames extends StatelessWidget {
         children: <Widget>[
           Text(
             "У вас нет возможности добавлять свои игры. Чтобы получить доступ к конструктору необходимо активировать аккаунт.",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: context.watch<GoTheme>().textColor),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
@@ -230,7 +233,10 @@ class CanNotAddGames extends StatelessWidget {
             color: context.watch<GoTheme>().secondaryColor,
             splashColor: context.watch<GoTheme>().thirdlyColor,
             textColor: Colors.white,
-            child: Text('Узнать подробнее'),
+            child: Text(
+              'Узнать подробнее',
+              style: TextStyle(color: context.watch<GoTheme>().textColor),
+            ),
           )
         ],
       ),
@@ -255,7 +261,7 @@ class _GalleryImagePickerState extends State<GalleryImagePicker> {
   Future getImage(source) async {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    double cardWidth = screenWidth - context.watch<GoTheme>().margin * 2;
+    double cardWidth = screenWidth;
     double cardHeight = cardWidth * 9 / 16;
 
     final pickedFile = await picker.getImage(source: source);
@@ -274,10 +280,9 @@ class _GalleryImagePickerState extends State<GalleryImagePicker> {
     });
   }
 
-  TextStyle modalItemTextStyle = TextStyle(color: Colors.white.withOpacity(0.8));
-
   @override
   Widget build(BuildContext context) {
+    TextStyle modalItemTextStyle = TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.8));
     return GestureDetector(
       onTap: () => showModalBottomSheet(
         context: context,
@@ -346,7 +351,7 @@ class _GalleryImagePickerState extends State<GalleryImagePicker> {
               child: Text(
                 widget.title,
                 style: TextStyle(
-                  color: Colors.white.withOpacity(0.5),
+                  color: context.watch<GoTheme>().textColor.withOpacity(0.5),
                 ),
               ),
             ),
@@ -442,8 +447,9 @@ class _BottomSelectorState extends State<BottomSelector> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("${widget.title}", style: TextStyle(color: Colors.white.withOpacity(0.5))),
-            Text("${widget.now}", style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 12)),
+            Text("${widget.title}", style: TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.5))),
+            Text("${widget.now}",
+                style: TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.3), fontSize: 12)),
           ],
         ),
       ),
@@ -526,7 +532,8 @@ class _ColorPickerState extends State<ColorPicker> {
             children: [
               Text(
                 widget.label,
-                style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.width / 30),
+                style: TextStyle(
+                    color: context.watch<GoTheme>().textColor, fontSize: MediaQuery.of(context).size.width / 30),
               ),
               Container(
                 width: 28,

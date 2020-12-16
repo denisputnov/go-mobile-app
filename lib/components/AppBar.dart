@@ -13,6 +13,7 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    this.color = context.watch<GoTheme>().textColor;
     return SafeArea(
       child: Container(
         decoration: backgroundColor == null

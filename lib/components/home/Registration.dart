@@ -117,7 +117,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                             children: <Widget>[
                               Text(
                                 username,
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(color: context.watch<GoTheme>().textColor, fontSize: 16),
                                 overflow: TextOverflow.fade,
                               ),
                               SizedBox(height: context.watch<GoTheme>().padding / 3),
@@ -146,12 +146,15 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SvgPicture.asset('./assets/icons/sad_face.svg'),
+                    SvgPicture.asset(
+                      './assets/icons/sad_face.svg',
+                      color: context.watch<GoTheme>().textColor,
+                    ),
                     SizedBox(height: 20),
                     Text(
                       'Вы не авторизованы. Нажмите, чтобы авторизоваться.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: context.watch<GoTheme>().textColor),
                     )
                   ],
                 ),

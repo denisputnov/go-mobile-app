@@ -46,7 +46,7 @@ class _TextFieldWithOwnControllerState extends State<TextFieldWithOwnController>
         onTap: () => FocusScope.of(context).unfocus(),
         decoration: InputDecoration(
           hintText: widget.hint,
-          hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+          hintStyle: TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.5)),
           counterStyle: TextStyle(color: Colors.white),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),

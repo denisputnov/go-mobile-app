@@ -31,20 +31,29 @@
         }
 
         class Dot {
+            /*  'standard' class - standard dot which can't do nothing. It's only like a placeholder, changable body.
+            *   'single-choose' - like if and else - class of choosable dots which can provide single choose for user.  
+            *   'multi-choose' - like if-elif-else - class of choosable dots which can provide multi choose for user.
+            *   'end-dot' - the end dot which is the end of the graph. It is a child for each dot in the 'sectionId-1' dots. It haven't a child.
+            *   'text-dot' - class of content dots which have only a text and button "next".
+            *   'skip-dot' - logistic dot which is not showable. It's needed for skipping the section for a different length of logistic ways of graph.
+            */
+
             constructor(sectionId, parent) {
                 this.sectionId = sectionId;
                 this.id = getIdForDot();
                 this.parent = parent;
-                this.children = []
+                this.children = [];
+                this.class = "standard";
                 this.x = 0;
                 this.y = 0;
-                // this.connectedWith = connectedWith;
+                this.color = 'grey';
+                this.maxChildAmount = 1;
             }
 
             constructConnections() {
                 if (this.children.length === 0) return;
                 let $connections = document.getElementById('connections');
-                // console.log(this.children);
                 for (let childId of this.children) {
                     let child = getDotById(childId);
                     
@@ -53,22 +62,74 @@
                     try {
                         var additionalX = child.x;
                         var additionalY = this.y + sectionHeight * 0.3;
-                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="#FF8181" fill="transparent" stroke-width="4" />`;
+                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="${this.color}" fill="transparent" stroke-width="4" />`;
                     } catch (error) {
                         botprint(error);
                     }
-                    // let $path = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-                    // $path.setAttribute('id', childId);
-                    // $path.setAttribute('d', `M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}`);
-                    // $path.setAttribute('stroke', 'red');
-                    // $path.setAttribute('fill', 'transparent');
-                    // $path.setAttribute('stroke-width', '5');
-
-                    // console.log($path);
-                    // $connections.appendChild($path);
                     $path !== undefined ? $connections.insertAdjacentHTML('beforeend', $path) : null;
                 }
                 rerender();
+            }
+        }
+
+        class SkipDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'skip-dot';
+                this.color = '#F4F4F4';
+                this.maxChildAmount = 1;
+            }
+        }
+
+        class SingleChooseDot extends Dot { 
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'single-choose-dot';
+                this.color = '#64ff3d';
+                this.maxChildAmount = 2;
+
+                this.question = '';
+                this.answers = []; // index of correct answer == index of correct child 
+                this.image = '';
+            }
+        }
+
+        class MultiChooseDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'multi-choose-dot';
+                this.color = '#81D1FF';
+                this.maxChildAmount = 4;
+
+                this.question = '';
+                this.answers = []; // index of answer == index of child
+                this.image = '';
+            }
+        }
+
+        class EndDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'end-dot';
+                this.color = '#FF8181';
+                this.maxChildAmount = 0;
+
+                this.image = '';
+                this.text = '';
+                this.promocode = '';
+                this.link = '';
+            }
+        }
+
+        class TextDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'text-dot';
+                this.color = '#FF8181';
+                this.maxChildAmount = 1;
+
+                this.text = '';
+                this.image = '';
             }
         }
         
@@ -86,46 +147,25 @@
         var dots = {
             0: { 
                 'dots': [
-                    new Dot(0, null),
+                    new TextDot(0, null),
                 ]
             },
-            // 1: { 
-            //     'dots': [
-            //         new Dot(1, 1),
-            //         new Dot(1, 2),
-            //     ]
-            // },
-            // 2: { 
-            //     'dots': [
-            //         new Dot(2, 3),
-            //         new Dot(2, 4),
-            //         new Dot(2, 5),
-            //     ]
-            // },
-            // 3: { 
-            //     'dots': [
-            //         new Dot(3, 6),
-            //         new Dot(3, 7),
-            //         new Dot(3, 8),
-            //         new Dot(3, 9),
-            //     ]
-            // },
-            // 4: { 
-            //     'dots': [
-            //         new Dot(4, 10),
-            //         new Dot(4, 11),
-            //         new Dot(4, 12),
-            //         new Dot(4, 13),
-            //     ]
-            // },
         }
-
-        // var dots = {"0":{"dots":[{"sectionId":0,"id":0,"parent":null,"children":[1,2,3],"x":196.5,"y":58.949999999999996}]},"1":{"dots":[{"sectionId":1,"id":1,"parent":0,"children":[],"x":98.25,"y":176.85},{"sectionId":1,"id":2,"parent":0,"children":[],"x":196.5,"y":176.85},{"sectionId":1,"id":3,"parent":0,"children":[4,5,6],"x":294.75,"y":176.85}]},"2":{"dots":[{"sectionId":2,"id":4,"parent":3,"children":[],"x":98.25,"y":294.75},{"sectionId":2,"id":5,"parent":3,"children":[],"x":196.5,"y":294.75},{"sectionId":2,"id":6,"parent":3,"children":[7,8,9],"x":294.75,"y":294.75}]},"3":{"dots":[{"sectionId":3,"id":7,"parent":6,"children":[],"x":98.25,"y":412.65},{"sectionId":3,"id":8,"parent":6,"children":[],"x":196.5,"y":412.65},{"sectionId":3,"id":9,"parent":6,"children":[10,11,12],"x":294.75,"y":412.65}]},"4":{"dots":[{"sectionId":4,"id":10,"parent":9,"children":[],"x":98.25,"y":530.55},{"sectionId":4,"id":11,"parent":9,"children":[],"x":196.5,"y":530.55},{"sectionId":4,"id":12,"parent":9,"children":[13,14,15],"x":294.75,"y":530.55}]},"5":{"dots":[{"sectionId":5,"id":13,"parent":12,"children":[],"x":131,"y":648.45},{"sectionId":5,"id":14,"parent":12,"children":[],"x":262,"y":648.45},{"sectionId":5,"id":15,"parent":12,"children":[]}]}};
 
         var numberOfSections = 0;      
         function init() {
             var app = document.querySelector('#app');
+            // init start array of dos 
             Object.keys(dots).forEach(() => addSection());
+            // init allert dialog
+            __initAlertDialog();
+        }
+
+        function __initAlertDialog() {
+            app.insertAdjacentHTML('afterbegin', 
+            `<div class="info-message-wrapper">
+                <p class="info-message-content"></p>
+            </div>`);
         }
         
         // add section with dots if they are or add empty section 
@@ -140,11 +180,15 @@
                         
                         localDot.id = dot.id;
                         localDot.classList.add('dot');
-                        localDot.classList.add('standart');
+                        localDot.classList.add(dot.class);
                         localDot.addEventListener('click', () => {
                             CalledDotId.postMessage(`${dot.id}`);
                             SectionId.postMessage(`${dot.sectionId}`);
                             Controller.postMessage('openBottomSheet');
+                            localDot.classList.add('dot-choose-animation');
+                            setTimeout(() => {
+                                localDot.classList.remove('dot-choose-animation')
+                            }, 1000);
                         });                        
                         $section.appendChild(localDot);
                     });
@@ -161,7 +205,7 @@
             document.getElementById(sectionId).remove();
         }
         
-        function addDot(sectionId, calledDotId) {
+        function addDot(sectionId, calledDotId, dotType) {
             addSection(sectionId - 1);
             try {
                 dots[sectionId]['dots'];
@@ -171,23 +215,25 @@
                 }
             }
             try {
-                let newDot = new Dot(sectionId, calledDotId);
-                dots[sectionId]['dots'].push(newDot);   
+                let calledDot = getDotById(calledDotId);
+                if (calledDot.children.length < calledDot.maxChildAmount) {
+                    let newDot = new dotType(sectionId, calledDotId);
 
-                for (let i = 0; i < dots[sectionId - 1]['dots'].length; i++) {
-                    if (dots[sectionId - 1]['dots'][i].id === calledDotId) {
-                        if (dots[sectionId - 1]['dots'].indexOf(dots[sectionId - 1]['dots'][i]) >= dots[sectionId - 1]['dots'].length / 2) {
+                    dots[sectionId]['dots'].push(newDot);   
+
+                    for (let i = 0; i < dots[sectionId - 1]['dots'].length; i++) {
+                        if (dots[sectionId - 1]['dots'][i].id === calledDotId) {
                             dots[sectionId - 1]['dots'][i].children.push(newDot.id);
-                        } else {
-                            dots[sectionId - 1]['dots'][i].children.unshift(newDot.id);
+                            botprint(JSON.stringify(dots));
                         }
-                        botprint(JSON.stringify(dots));
                     }
-                }
 
-                calculateCords();
-                handleConnections();
-                rerender();
+                    calculateCords();
+                    handleConnections();
+                    rerender();
+                } else {
+                    showAlert("Достигнуто максимальное количество дочерних точек для этого элемента.");
+                }
             } catch (error) {
                 botprint(error);
             }
@@ -252,35 +298,14 @@
                 let dotsAmount = group.length;
                 for (let j = 0; j < group.length; j++) {
                     dots[i]['dots'][j].x = deviceWidth / (dotsAmount + 1) * (j + 1);
-                    // let koeff = group.length * 10;
-                    // if ( j < group.length / 2) dots[i]['dots'][j].x -= deviceWidth / 200 * j;
-                    // if ( j > group.length / 2 ) dots[i]['dots'][j].x += deviceWidth / 200 * j;
                     dots[i]['dots'][j].y = halfAnSectionHeight + sectionHeight * i;
-                    // let $dot = document.querySelector(`#${dots[i]['dots'][j].id} .dot`);
-                    // console.log(dots[i]['dots'][j].id);
-                    // let $dot = document.getElementsByClassName('dot')[dots[i]['dots'][j].id];
-                    // console.log($dot);
-                    // console.log(1);
-                    // let dotpos = $dot.getBoundingClientRect();
-                    // console.log(2);
-                    // console.log(dotpos);
-                    // dots[i]['dots'][j].x = (dotpos.right - dotpos.left) / 2;
-                    // dots[i]['dots'][j].y = (dotpos.bottom - dotpos.top)/2;
-                    // console.log(dots[i]['dots'][j]);
                 }
             }
         }
         
         function handleConnections() {
-            // document.getElementById('connections').remove();
             document.body.lastChild.remove();
-            // $svg.remove();
-            app.insertAdjacentHTML('afterend', '<svg width="100%" height="100%" id="connections"></svg>');
-            // let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            // svg.setAttribute('id', 'connections');
-            // svg.setAttribute('width', '100%');
-            // svg.setAttribute('height', '100%');
-            // document.body.appendChild(svg);
+            app.insertAdjacentHTML('afterend', `<svg width="100%" height="${window.innerWidth * 0.3 * Object.keys(dots).length}" id="connections"></svg>`);
             let $connections = document.getElementById('connections');
             for (let i = 0; i < Object.keys(dots).length; i++) {
                 for(let j = 0; j < dots[i]['dots'].length; j++) {
@@ -288,13 +313,13 @@
                 }
             }
         }
-        
-        // function handleDotEvents() {
-        //     let $dots = document.querySelectorAll('.dot');
-        //     $dots.forEach((dot) => {
-        //         dot.addEventListener('click', () => addSection(dot.sectionId));
-        //     })
-        // }
+
+        function showAlert(message) {
+            let $infoMessage = document.querySelector('.info-message-wrapper');
+            document.querySelector('.info-message-content').textContent = message;
+            $infoMessage.classList.add('visible-message');
+            setTimeout(() => $infoMessage.classList.remove('visible-message'), 3000);
+        }
         
         function rerender() {
             numberOfSections = 0;
@@ -302,14 +327,16 @@
             init();
         }
 
-        
     </script>
     <style>
+        @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&display=swap");
         * {
+            font-family: "Comfortaa", cursive;
+            font-style: normal;
+            font-weight: normal;
             margin: 0;
             padding: 0;
         }
-
         body {
             width: 100%;
             min-height: 100vh;
@@ -323,50 +350,157 @@
             width: inherit;
             height: inherit;
         }
-
         #connections {
             z-index: -10;
             position: absolute;
             top: 0;
             left: 0;
         }
-
-
         path {
-            transition: d 1s ease;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1s ease-in-out forwards;
         }
-
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
         section {
+            position: relative;
             width: inherit;
             height: 30vw;
             display: flex;
             flex-direction: row;
             justify-content: space-evenly;
         }
-
-        /* section:nth-child(odd) {
+        /* section:nth-child(even) {
+            z-index: -1000;
             background-color: #2D2D2D;
+            border-radius: 60px;
         }
-
-        section:nth-child(even) {
+        section:nth-child(odd) {
+            z-index: -1000;
             background-color: #313131;
+            border-radius: 60px;
         } */
-        
+        .info-message-wrapper {
+            min-width: 70vw;
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            margin: 0 auto;
+            top: -50px;
+            left: 50vw;
+            transform: translate(-50%);
+            z-index: 100000;
+            border-radius: 20px;
+            opacity: 0;
+            width: auto;
+            max-width: 80vw;
+            overflow: hidden;
+            transition: top 500ms ease-in-out, opacity 200ms ease-in-out 200ms;
+        }  
+        .info-message-content {
+            text-align: center;
+            margin: 0;
+            padding: 3vw;
+            font-size: 4vw;
+            color: #fff;
+        }
+        .visible-message {
+            transition: top 500ms ease-in-out, opacity 500ms ease-in-out;
+            opacity: 1;
+            top: 20vh;
+            transform: translate(-50%);
+        }
+        .dot-choose-animation {
+            transform: scale(1.4);
+        }
+        .dot-choose-animation::after {
+            content: '';
+            opacity: 0;
+            border-radius: 50%;
+            position: absolute;
+            width: 8vw;
+            height: 8vw;
+            transform: translate(-50%, -50%);
+        } 
         .dot {
+            transition-duration: 1000ms;
             margin: auto 0;
             width: 0.1;
             height: 0.1;
         }
-        .standart {
+        .standard {
             position: relative;
         }
-        .standart::after {
+        .standard::before {
             content: '';
             border-radius: 50%;
             width: 8vw;
             height: 8vw;
             position: absolute;
             background-color: #FF8181;
+            transform: translate(-50%, -50%);
+        }
+        .single-choose-dot {
+            position: relative;
+        }
+        .single-choose-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #64ff3d;
+            transform: translate(-50%, -50%);
+        }
+        .text-dot {
+            position: relative;
+        }
+        .text-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #FF8181;
+            transform: translate(-50%, -50%);
+        }
+        .multi-choose-dot {
+            position: relative;
+        }
+        .multi-choose-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #81D1FF;
+            transform: translate(-50%, -50%);
+        }
+        .skip-dot {
+            position: relative;
+        }
+        .skip-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #f4f4f4;
+            transform: translate(-50%, -50%);
+        }
+        .end-dot {
+            position: relative;
+        }
+        .end-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #ff8181;
             transform: translate(-50%, -50%);
         }
     </style>

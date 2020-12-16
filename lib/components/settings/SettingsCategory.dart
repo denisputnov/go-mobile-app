@@ -18,7 +18,7 @@ class SettingsCategory extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.w400,
-            color: Colors.white,
+            color: context.watch<GoTheme>().textColor,
           ),
           textAlign: TextAlign.left,
         ),

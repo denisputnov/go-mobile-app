@@ -15,14 +15,15 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool isDarkTheme = true;
-  void changeTheme() {
-    isDarkTheme ? context.read<GoTheme>().applyWhiteTheme() : context.read<GoTheme>().applyDarkTheme();
-    isDarkTheme = !isDarkTheme;
-  }
-
   @override
   Widget build(BuildContext context) {
+    bool isDarkTheme = context.watch<GoTheme>().textColor == Colors.white ? true : false;
+
+    void changeTheme() {
+      isDarkTheme ? context.read<GoTheme>().applyWhiteTheme() : context.read<GoTheme>().applyDarkTheme();
+      isDarkTheme = !isDarkTheme;
+    }
+
     return Scaffold(
       appBar: DefaultAppBar(),
       backgroundColor: context.watch<GoTheme>().backgroundColor,

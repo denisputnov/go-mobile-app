@@ -50,6 +50,7 @@ class GameCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: startColor,
           borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
+          boxShadow: context.watch<GoTheme>().boxShadow,
         ),
         margin: EdgeInsets.all(context.watch<GoTheme>().margin),
         width: cardWidth,

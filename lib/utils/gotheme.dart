@@ -39,7 +39,7 @@ class GoTheme with ChangeNotifier {
   }
 
   void applyWhiteTheme() {
-    _textColor = Color(0xff212121);
+    _textColor = Color(0xFF5A5A5A);
     _backgroundColor = Colors.white;
     _secondaryColor = Color(0xFFF3F3F3);
     _thirdlyColor = Color(0xFFE1E1E1);
