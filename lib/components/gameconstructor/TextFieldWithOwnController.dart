@@ -26,7 +26,7 @@ class _TextFieldWithOwnControllerState extends State<TextFieldWithOwnController>
       ),
       margin: EdgeInsets.all(context.watch<GoTheme>().margin),
       child: TextField(
-        style: TextStyle(color: Colors.white, decoration: TextDecoration.none),
+        style: TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.8), decoration: TextDecoration.none),
         controller: widget.controller,
         onChanged: (String value) async {
           widget.callback(value);

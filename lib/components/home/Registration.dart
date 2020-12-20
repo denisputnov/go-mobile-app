@@ -70,7 +70,7 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                           builder: (BuildContext context) {
                             return Scaffold(
                               body: Theme(
-                                data: ThemeData.dark(),
+                                data: context.watch<GoTheme>().isDarkTheme ? ThemeData.dark() : ThemeData.light(),
                                 child: CupertinoAlertDialog(
                                   title: Container(
                                     margin: EdgeInsets.only(bottom: 10),

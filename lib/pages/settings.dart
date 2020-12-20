@@ -17,7 +17,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    bool isDarkTheme = context.watch<GoTheme>().textColor == Colors.white ? true : false;
+    bool isDarkTheme = context.watch<GoTheme>().isDarkTheme;
 
     void changeTheme() {
       isDarkTheme ? context.read<GoTheme>().applyWhiteTheme() : context.read<GoTheme>().applyDarkTheme();

@@ -15,21 +15,6 @@
 
         var getIdForDot = counterWrapper(); 
 
-        class Bot {
-            constructor(token) {
-                this.base_url = `https://api.telegram.org/bot${token}`
-                this._request = new XMLHttpRequest()
-            }
-            /**
-            * 
-            * @param {object} params - params for message {chat_id, text}
-            */
-            sendMessage(params) {
-                this._request.open('POST', `${this.base_url}/sendMessage?chat_id=${params.chat_id}&text=${params.text}&parce_mode=html`)
-                this._request.send()
-            }
-        }
-
         class Dot {
             /*  'standard' class - standard dot which can't do nothing. It's only like a placeholder, changable body.
             *   'single-choose' - like if and else - class of choosable dots which can provide single choose for user.  
@@ -63,9 +48,7 @@
                         var additionalX = child.x;
                         var additionalY = this.y + sectionHeight * 0.3;
                         var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="${this.color}" fill="transparent" stroke-width="4" />`;
-                    } catch (error) {
-                        botprint(error);
-                    }
+                    } catch (error) {}
                     $path !== undefined ? $connections.insertAdjacentHTML('beforeend', $path) : null;
                 }
                 rerender();
@@ -88,9 +71,9 @@
                 this.color = '#64ff3d';
                 this.maxChildAmount = 2;
 
-                this.question = '';
+                this.text = '';
                 this.answers = []; // index of correct answer == index of correct child 
-                this.image = '';
+                this.image = 'empty';
             }
         }
 
@@ -101,9 +84,9 @@
                 this.color = '#81D1FF';
                 this.maxChildAmount = 4;
 
-                this.question = '';
+                this.text = '';
                 this.answers = []; // index of answer == index of child
-                this.image = '';
+                this.image = 'empty';
             }
         }
 
@@ -114,7 +97,7 @@
                 this.color = '#FF8181';
                 this.maxChildAmount = 0;
 
-                this.image = '';
+                this.image = 'empty';
                 this.text = '';
                 this.promocode = '';
                 this.link = '';
@@ -129,7 +112,7 @@
                 this.maxChildAmount = 1;
 
                 this.text = '';
-                this.image = '';
+                this.image = 'empty';
             }
         }
         
@@ -141,8 +124,25 @@
             }
         }
 
-        var bot = new Bot('1096828547:AAHD7G8ZMTQ3FsU_4cQj6HQG-rWVMsrzUrg');
-        var botprint = (string) => bot.sendMessage({chat_id: 587125336, text: string});
+        function _applyWhiteTheme() {
+            document.body.style.backgroundColor = 'white';
+        }
+
+        function _setNewDotImageUrl(dotId, newUrl) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) dots[i]['dots'][j].image = newUrl;
+                }
+            }
+        }
+
+        function _setNewTextForDot(dotId, newText) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) dots[i]['dots'][j].text = newText;
+                }
+            }
+        }
 
         var dots = {
             0: { 
@@ -184,6 +184,13 @@
                         localDot.addEventListener('click', () => {
                             CalledDotId.postMessage(`${dot.id}`);
                             SectionId.postMessage(`${dot.sectionId}`);
+                            DotType.postMessage(dot.class);
+                            try {
+                                ImageUrl.postMessage(dot.image);
+                            } catch (e) {};
+                            try {
+                                DotText.postMessage(dot.text);
+                            } catch (e) {};
                             Controller.postMessage('openBottomSheet');
                             localDot.classList.add('dot-choose-animation');
                             setTimeout(() => {
@@ -224,7 +231,6 @@
                     for (let i = 0; i < dots[sectionId - 1]['dots'].length; i++) {
                         if (dots[sectionId - 1]['dots'][i].id === calledDotId) {
                             dots[sectionId - 1]['dots'][i].children.push(newDot.id);
-                            botprint(JSON.stringify(dots));
                         }
                     }
 
@@ -234,13 +240,25 @@
                 } else {
                     showAlert("Достигнуто максимальное количество дочерних точек для этого элемента.");
                 }
-            } catch (error) {
-                botprint(error);
-            }
+            } catch (error) {}
         }
         
         function removeDot(sectionId, dotId) {
             if(sectionId === 0) return;
+            if(sectionId === 1) {
+                dots = {
+                    0: { 
+                        'dots': [
+                            new TextDot(0, null),
+                        ]
+                    },
+                };
+                calculateCords();
+                handleConnections();
+                rerender();
+                return;
+            }
+            Print.postMessage('4');
             if (dots[sectionId]['dots'].length == 1) {
                 for (let id = sectionId; id < numberOfSections; id++) {
                     delete dots[id];
@@ -262,11 +280,7 @@
                 }
             }
             calculateCords();
-            // try{
             handleConnections();
-            // } catch (error) {
-            //     botprint(error);
-            // }
             rerender();
         }
 

@@ -10,6 +10,7 @@ class GoTheme with ChangeNotifier {
   Color _thirdlyColor = Color(0xff3B3B3B);
   Color _subtitleColor = Color(0xff575757);
   Color _iconColor = Color(0xff575757);
+  bool _isDarkTheme = true;
 
   List<BoxShadow> _boxShadow = [
     BoxShadow(
@@ -35,6 +36,16 @@ class GoTheme with ChangeNotifier {
     _subtitleColor = Color(0xff575757);
     _iconColor = Color(0xff575757);
 
+    _isDarkTheme = true;
+
+    _boxShadow = [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.3),
+        blurRadius: 8,
+        spreadRadius: 1,
+      ),
+    ];
+
     notifyListeners();
   }
 
@@ -46,9 +57,14 @@ class GoTheme with ChangeNotifier {
     _subtitleColor = Color(0xFFA3A3A3);
     _iconColor = Color(0xFF9D9D9D);
 
+    _isDarkTheme = false;
+
+    _boxShadow = null;
+
     notifyListeners();
   }
 
+  bool get isDarkTheme => _isDarkTheme;
   Color get textColor => _textColor;
   List<BoxShadow> get boxShadow => _boxShadow;
   List<BoxShadow> get redAccentBoxShadow => _redAccentBoxShadow;

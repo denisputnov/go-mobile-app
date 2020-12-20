@@ -314,19 +314,15 @@ class _GalleryImagePickerState extends State<GalleryImagePicker> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                Wrap(
-                  children: [
-                    FlatButton(
-                      onPressed: () {
-                        getImage(ImageSource.gallery);
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        child: Text('Выбрать на устройстве', style: modalItemTextStyle),
-                      ),
-                    ),
-                  ],
+                FlatButton(
+                  onPressed: () {
+                    getImage(ImageSource.gallery);
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    child: Text('Выбрать на устройстве', style: modalItemTextStyle),
+                  ),
                 ),
               ],
             ),
@@ -421,7 +417,7 @@ class _BottomSelectorState extends State<BottomSelector> {
                           width: double.infinity,
                           child: Text(
                             widget.items[index][0],
-                            style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                            style: TextStyle(color: context.watch<GoTheme>().textColor.withOpacity(0.8)),
                           ),
                         ),
                       );
@@ -480,7 +476,7 @@ class _ColorPickerState extends State<ColorPicker> {
           return showDialog(
             context: context,
             builder: (BuildContext context) => Theme(
-              data: ThemeData.dark(),
+              data: context.watch<GoTheme>().isDarkTheme ? ThemeData.dark() : ThemeData.light(),
               child: CupertinoAlertDialog(
                 content: Container(
                   width: double.infinity,
