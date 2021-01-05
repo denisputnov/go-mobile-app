@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class TextTitle extends StatelessWidget {
   String label;
@@ -17,6 +18,7 @@ class TextTitle extends StatelessWidget {
           style: TextStyle(
             fontSize: MediaQuery.of(context).size.width / 20,
             fontWeight: FontWeight.w400,
+            color: context.watch<GoTheme>().textColor,
           ),
           textAlign: TextAlign.left,
         ),

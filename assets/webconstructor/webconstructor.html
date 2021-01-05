@@ -72,7 +72,7 @@
                 this.maxChildAmount = 2;
 
                 this.text = '';
-                this.answers = []; // index of correct answer == index of correct child 
+                this.answers = ['Ответ 1','Ответ 2']; // index of correct answer == index of correct child 
                 this.image = 'empty';
             }
         }
@@ -85,7 +85,7 @@
                 this.maxChildAmount = 4;
 
                 this.text = '';
-                this.answers = []; // index of answer == index of child
+                this.answers = ['Ответ 1','Ответ 2','Ответ 3','Ответ 4']; // index of answer == index of child
                 this.image = 'empty';
             }
         }
@@ -167,6 +167,17 @@
                 <p class="info-message-content"></p>
             </div>`);
         }
+
+        function _changeDotQuestions(dotId, children, id) {
+            // let chld = JSON.parse(children);
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) {
+                        dots[i]['dots'][j].answers[id] = children;
+                    };
+                }
+            }
+        }
         
         // add section with dots if they are or add empty section 
         function addSection(calledFromSectionId = -1) {
@@ -191,6 +202,13 @@
                             try {
                                 DotText.postMessage(dot.text);
                             } catch (e) {};
+                            try {
+                                Print.postMessage(JSON.stringify(dot.answers));
+                                GetAnswers.postMessage(JSON.stringify(dot.answers));
+                            } catch (e) {
+                                Print.postMessage('ДА Я ТВОЙ РОТ ЕБАЛ');
+                            };
+                            AmountOfChildrens.postMessage(dot.children.length);
                             Controller.postMessage('openBottomSheet');
                             localDot.classList.add('dot-choose-animation');
                             setTimeout(() => {

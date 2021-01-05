@@ -107,6 +107,9 @@ class _WebConstructorState extends State<WebConstructor> {
                               wcvar.dotsWithText.contains(wcvar.dotType)
                                   ? TextAreaForDot(controller: _controller)
                                   : Container(),
+                              wcvar.dotsWithAnswers.contains(wcvar.dotType)
+                                  ? EditAnswersForDot(controller: _controller)
+                                  : Container(),
                               DeleteDot(controller: _controller),
                             ],
                           ),
@@ -153,6 +156,21 @@ class _WebConstructorState extends State<WebConstructor> {
             },
           ),
           JavascriptChannel(
+            name: 'AmountOfChildrens',
+            onMessageReceived: (JavascriptMessage msg) {
+              wcvar.amountOfChildren = int.parse(msg.message);
+              print('AmountOfChildrens ${msg.message}');
+            },
+          ),
+          JavascriptChannel(
+            name: 'GetAnswers',
+            onMessageReceived: (JavascriptMessage msg) {
+              wcvar.answers = List.from(jsonDecode(msg.message));
+              // print('тот принт что мне нужен ${msg.message}');
+              // print(List.from(jsonDecode(msg.message)));
+            },
+          ),
+          JavascriptChannel(
             name: 'DotText',
             onMessageReceived: (JavascriptMessage msg) {
               wcvar.text = msg.message;
@@ -164,7 +182,7 @@ class _WebConstructorState extends State<WebConstructor> {
             onMessageReceived: (JavascriptMessage msg) {
               print('Message ${msg.message}');
             },
-          )
+          ),
         ].toSet(),
       ),
     );
@@ -595,7 +613,6 @@ class _TextAreaForDotState extends State<TextAreaForDot> {
                         ),
                         content: TextField(
                           onChanged: (text) {
-                            print(text);
                             setState(() {
                               setNoSaved();
                             });
@@ -650,6 +667,243 @@ class _TextAreaForDotState extends State<TextAreaForDot> {
               color: context.watch<GoTheme>().textColor.withOpacity(0.8),
               fontSize: MediaQuery.of(context).size.width / 22,
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class EditAnswersForDot extends StatefulWidget {
+  WebViewController controller;
+
+  EditAnswersForDot({@required this.controller});
+
+  @override
+  _EditAnswersForDotState createState() => _EditAnswersForDotState();
+}
+
+class _EditAnswersForDotState extends State<EditAnswersForDot> {
+  bool isSaved = true;
+
+  void setNoSaved() {
+    setState(() {
+      isSaved = false;
+    });
+  }
+
+  void setSaved() {
+    setState(() {
+      isSaved = true;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(context.watch<GoTheme>().margin),
+      decoration: BoxDecoration(
+        boxShadow: context.watch<GoTheme>().boxShadow,
+        color: context.watch<GoTheme>().thirdlyColor,
+        borderRadius: BorderRadius.circular(
+          context.watch<GoTheme>().borderRadius,
+        ),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          showCupertinoDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (BuildContext context, setState) {
+                  return Scaffold(
+                    body: Theme(
+                      data: context.watch<GoTheme>().isDarkTheme ? ThemeData.dark() : ThemeData.light(),
+                      child: CupertinoAlertDialog(
+                        title: Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          child: Column(
+                            children: [
+                              Text(
+                                'Редактировать вопросы',
+                                style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.width / 20,
+                                  color: context.watch<GoTheme>().textColor,
+                                ),
+                              ),
+                              DelayedDisplay(
+                                child: Text(
+                                  isSaved ? "Сохранено" : "Не сохранено",
+                                  style: TextStyle(
+                                    color: isSaved ? Colors.green.withOpacity(0.8) : Colors.redAccent.withOpacity(0.8),
+                                    fontSize: MediaQuery.of(context).size.width / 30,
+                                  ),
+                                ),
+                                delay: new Duration(microseconds: 500),
+                                slidingCurve: Curves.easeIn,
+                                slidingBeginOffset: const Offset(0, -0.2),
+                              )
+                            ],
+                          ),
+                        ),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: wcvar.amountOfChildren > 1
+                              ? [
+                                  _AnswersField(
+                                    0,
+                                    questionText: wcvar.answers[0],
+                                    noSavedCallback: setNoSaved,
+                                    savedCallback: setSaved,
+                                    higherSetState: setState,
+                                    controller: widget.controller,
+                                  ),
+                                  _AnswersField(
+                                    1,
+                                    questionText: wcvar.answers[1],
+                                    noSavedCallback: setNoSaved,
+                                    savedCallback: setSaved,
+                                    higherSetState: setState,
+                                    controller: widget.controller,
+                                  ),
+                                  wcvar.dotType == 'multi-choose-dot' && wcvar.amountOfChildren > 2
+                                      ? _AnswersField(
+                                          2,
+                                          questionText: wcvar.answers[2],
+                                          noSavedCallback: setNoSaved,
+                                          savedCallback: setSaved,
+                                          higherSetState: setState,
+                                          controller: widget.controller,
+                                        )
+                                      : Container(),
+                                  wcvar.dotType == 'multi-choose-dot' && wcvar.amountOfChildren > 3
+                                      ? _AnswersField(
+                                          3,
+                                          questionText: wcvar.answers[3],
+                                          noSavedCallback: setNoSaved,
+                                          savedCallback: setSaved,
+                                          higherSetState: setState,
+                                          controller: widget.controller,
+                                        )
+                                      : Container(),
+                                ]
+                              : [
+                                  Container(
+                                    child: Text(
+                                      'Вы не можете добавить вопрос, необходимо создать не менее двух листьев для дерева.',
+                                      style: TextStyle(
+                                        color: context.watch<GoTheme>().textColor,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                        ),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: Text('Сохранить и выйти'),
+                            isDefaultAction: true,
+                            onPressed: () {
+                              setSaved();
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
+        child: Container(
+          padding: EdgeInsets.all(context.watch<GoTheme>().padding / 2),
+          width: double.infinity,
+          child: Text(
+            'Добавить ответы',
+            style: TextStyle(
+              color: context.watch<GoTheme>().textColor.withOpacity(0.8),
+              fontSize: MediaQuery.of(context).size.width / 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AnswersField extends StatefulWidget {
+  String questionText;
+  int index;
+  Function noSavedCallback;
+  Function savedCallback;
+  Function higherSetState;
+  WebViewController controller;
+
+  _AnswersField(this.index,
+      {this.questionText, this.noSavedCallback, this.savedCallback, this.higherSetState, this.controller});
+  @override
+  __AnswersFieldState createState() => __AnswersFieldState();
+}
+
+class __AnswersFieldState extends State<_AnswersField> {
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController _textController = TextEditingController(text: widget.questionText);
+    _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+
+    return Container(
+      width: double.infinity,
+      child: TextField(
+        onTap: () async {
+          // Future.delayed(const Duration(seconds: 1),
+          //     () => );
+          // _controller.value = _controller.value.copyWith(text: newText, selection: newSelection)
+        },
+        onChanged: (newString) {
+          print(newString);
+          // print(_questions);
+          // _controller.text = newString;
+          // _textController = newString;
+          // setState(() {
+          //   setNoSaved();
+          // });
+          // widget.higherSetState(() {
+          //   widget.noSavedCallback();
+          // });
+          // _textController.text = newString;
+          // _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
+          widget.questionText = newString;
+          wcvar.answers[widget.index] = newString;
+
+          for (var i = 0; i < 4; i++) {
+            widget.controller
+                ?.evaluateJavascript('_changeDotQuestions(${wcvar.calledDotId}, "${wcvar.answers[i]}", $i)');
+          }
+          print(wcvar.answers);
+          print(wcvar.answers.runtimeType);
+        },
+        controller: _textController,
+        keyboardType: TextInputType.multiline,
+        maxLines: null,
+        style: TextStyle(color: context.watch<GoTheme>().textColor),
+        cursorColor: context.watch<GoTheme>().textColor.withOpacity(0.8),
+        decoration: InputDecoration(
+          hintText: 'Ваш ${widget.index + 1} ответ',
+          hintStyle: TextStyle(
+            color: context.watch<GoTheme>().textColor.withOpacity(0.5),
+            fontStyle: FontStyle.italic,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide.none,
           ),
         ),
       ),
