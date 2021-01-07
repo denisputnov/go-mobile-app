@@ -860,24 +860,7 @@ class __AnswersFieldState extends State<_AnswersField> {
     return Container(
       width: double.infinity,
       child: TextField(
-        onTap: () async {
-          // Future.delayed(const Duration(seconds: 1),
-          //     () => );
-          // _controller.value = _controller.value.copyWith(text: newText, selection: newSelection)
-        },
         onChanged: (newString) {
-          print(newString);
-          // print(_questions);
-          // _controller.text = newString;
-          // _textController = newString;
-          // setState(() {
-          //   setNoSaved();
-          // });
-          // widget.higherSetState(() {
-          //   widget.noSavedCallback();
-          // });
-          // _textController.text = newString;
-          // _textController.selection = TextSelection.fromPosition(TextPosition(offset: _textController.text.length));
           widget.questionText = newString;
           wcvar.answers[widget.index] = newString;
 
@@ -885,8 +868,6 @@ class __AnswersFieldState extends State<_AnswersField> {
             widget.controller
                 ?.evaluateJavascript('_changeDotQuestions(${wcvar.calledDotId}, "${wcvar.answers[i]}", $i)');
           }
-          print(wcvar.answers);
-          print(wcvar.answers.runtimeType);
         },
         controller: _textController,
         keyboardType: TextInputType.multiline,
