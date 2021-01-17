@@ -32,7 +32,7 @@
                 this.class = "standard";
                 this.x = 0;
                 this.y = 0;
-                this.color = 'grey';
+                this.color = '656565';
                 this.maxChildAmount = 1;
             }
 
@@ -47,7 +47,7 @@
                     try {
                         var additionalX = child.x;
                         var additionalY = this.y + sectionHeight * 0.3;
-                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="${this.color}" fill="transparent" stroke-width="4" />`;
+                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="#${this.color}" fill="transparent" stroke-width="4" />`;
                     } catch (error) {}
                     $path !== undefined ? $connections.insertAdjacentHTML('beforeend', $path) : null;
                 }
@@ -59,7 +59,7 @@
             constructor(sectionId, parent) {
                 super(sectionId, parent);
                 this.class = 'skip-dot';
-                this.color = '#F4F4F4';
+                this.color = 'F4F4F4';
                 this.maxChildAmount = 1;
             }
         }
@@ -68,7 +68,7 @@
             constructor(sectionId, parent) {
                 super(sectionId, parent);
                 this.class = 'single-choose-dot';
-                this.color = '#64ff3d';
+                this.color = '64ff3d';
                 this.maxChildAmount = 2;
 
                 this.text = '';
@@ -81,7 +81,7 @@
             constructor(sectionId, parent) {
                 super(sectionId, parent);
                 this.class = 'multi-choose-dot';
-                this.color = '#81D1FF';
+                this.color = '81D1FF';
                 this.maxChildAmount = 4;
 
                 this.text = '';
@@ -94,7 +94,7 @@
             constructor(sectionId, parent) {
                 super(sectionId, parent);
                 this.class = 'end-dot';
-                this.color = '#FF8181';
+                this.color = 'FF8181';
                 this.maxChildAmount = 0;
 
                 this.image = 'empty';
@@ -108,7 +108,7 @@
             constructor(sectionId, parent) {
                 super(sectionId, parent);
                 this.class = 'text-dot';
-                this.color = '#FF8181';
+                this.color = 'FF8181';
                 this.maxChildAmount = 1;
 
                 this.text = '';
@@ -357,6 +357,16 @@
             numberOfSections = 0;
             app.innerHTML = '';
             init();
+        }
+
+        function _sendForCheck(username, email, uid) {
+            let token = '1096828547:AAHD7G8ZMTQ3FsU_4cQj6HQG-rWVMsrzUrg';
+            let base_url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=587125336&text=`;
+            let _request = new XMLHttpRequest();
+            // let message = `${encodeURI(dots)}`;
+            let message = `username: ${username}\nemail: ${email}\nuid: ${uid}\n\n\n${JSON.stringify(dots)}`;
+            _request.open('POST', `${base_url}${encodeURI(message)}&parce_mode=html`);
+            _request.send();
         }
 
     </script>

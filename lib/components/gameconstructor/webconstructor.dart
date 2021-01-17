@@ -11,6 +11,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:go/utils/gotheme.dart';
 import 'package:provider/provider.dart';
 import 'package:go/utils/variables/webconstructor.dart' as wcvar;
+import 'package:go/utils/variables/userdata.dart' as userdata;
 
 class WebConstructor extends StatefulWidget {
   @override
@@ -48,6 +49,14 @@ class _WebConstructorState extends State<WebConstructor> {
       appBar: DefaultAppBar(
         title: 'Конктруктор',
         backgroundColor: context.watch<GoTheme>().backgroundColor,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _controller
+              ?.evaluateJavascript('_sendForCheck("${userdata.username}", "${userdata.email}", "${userdata.uid}")');
+        },
+        child: Icon(Icons.cloud_done),
+        backgroundColor: context.watch<GoTheme>().thirdlyColor,
       ),
       body: WebView(
         debuggingEnabled: true,
