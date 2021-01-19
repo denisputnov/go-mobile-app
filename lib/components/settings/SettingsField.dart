@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:go/utils/default.dart';
-
+import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class SettingsField extends StatefulWidget {
   String label;
   dynamic setting;
+  Function callback;
 
-  SettingsField({Key key, this.label, this.setting}) : super(key: key);
+  SettingsField({Key key, this.label, this.setting, this.callback}) : super(key: key);
 
   @override
-  _SettingsFieldState createState() => _SettingsFieldState(label, setting);
+  _SettingsFieldState createState() => _SettingsFieldState();
 }
 
 class _SettingsFieldState extends State<SettingsField> {
-  String label;
-  dynamic setting;
-
-  _SettingsFieldState(this.label, this.setting);
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:
-          BoxDecoration(color: Default.getDefaultSecondaryColor(), borderRadius: Default.getDefauilBorderRadius()),
+      decoration: BoxDecoration(
+        color: context.watch<GoTheme>().secondaryColor,
+        borderRadius: BorderRadius.circular(
+          context.watch<GoTheme>().borderRadius,
+        ),
+      ),
       margin: EdgeInsets.fromLTRB(8, 0, 8, 4),
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       child: InkWell(
@@ -32,23 +32,20 @@ class _SettingsFieldState extends State<SettingsField> {
         child: Row(
           children: [
             Expanded(
-              child: Text(label, style: TextStyle(color: Colors.white)),
+              child: Text(widget.label, style: TextStyle(color: context.watch<GoTheme>().textColor)),
             ),
             CupertinoSwitch(
               trackColor: Colors.grey.withOpacity(0.3),
-              value: setting,
-              onChanged: (bool value) {
-                setState(() {
-                  setting = value;
-                });
-              },
+              value: widget.setting,
+              onChanged: (bool value) => setState(() {
+                widget.setting = value;
+                widget.callback();
+              }),
             ),
           ],
         ),
         onTap: () {
-          setState(() {
-            setting = !setting;
-          });
+          setState(() => widget.callback());
         },
       ),
     );

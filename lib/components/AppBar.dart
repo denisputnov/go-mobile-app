@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   bool hasBackButton;
   String title;
   Color color;
+  Color backgroundColor;
 
-  DefaultAppBar({this.hasBackButton = true, this.title = '', this.color = Colors.white});
+  DefaultAppBar({this.hasBackButton = true, this.title = '', this.color = Colors.white, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
+    this.color = context.watch<GoTheme>().textColor;
     return SafeArea(
       child: Container(
+        decoration: backgroundColor == null
+            ? BoxDecoration()
+            : BoxDecoration(
+                color: backgroundColor,
+                boxShadow: context.watch<GoTheme>().boxShadow,
+              ),
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: <Widget>[

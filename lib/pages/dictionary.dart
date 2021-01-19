@@ -8,7 +8,8 @@ import '../components/AppBar.dart';
 import '../pages/smart_dict.dart';
 import '../pages/info_dict.dart';
 
-import 'package:go/utils/default.dart';
+import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class Dictionary extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _DictionaryState extends State<Dictionary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Default.getDefaultBackgroundColor(),
+      backgroundColor: context.watch<GoTheme>().backgroundColor,
       appBar: DefaultAppBar(),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
@@ -32,7 +33,7 @@ class _DictionaryState extends State<Dictionary> {
               startColor: Color(0xff0acffe).withOpacity(0.8),
               endColor: Color(0xff495aff).withOpacity(0.8),
               label: "Куда мне поехать?\nПомощник поможет выбрать путь!",
-              duration: 200,
+              duration: 300,
             ),
             DisctionaryCard(
               destination: InfoDict(),
@@ -40,7 +41,7 @@ class _DictionaryState extends State<Dictionary> {
               startColor: Color(0xff9be15d).withOpacity(0.4),
               endColor: Color(0xff9be15d).withOpacity(0.4),
               label: "Информация о разных туристических местах",
-              duration: 300,
+              duration: 400,
             )
           ],
         ),
@@ -57,10 +58,16 @@ class DisctionaryCard extends StatelessWidget {
   String label;
   Color fontColor;
   double fontSize;
-  int duration; 
+  int duration;
 
   DisctionaryCard(
-      {this.destination, this.imageSrc, this.startColor, this.endColor, this.label, this.fontColor = Colors.white, this.duration});
+      {this.destination,
+      this.imageSrc,
+      this.startColor,
+      this.endColor,
+      this.label,
+      this.fontColor = Colors.white,
+      this.duration});
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +79,18 @@ class DisctionaryCard extends StatelessWidget {
       },
       child: DelayedDisplay(
         delay: Duration(milliseconds: duration),
-        slidingBeginOffset: Offset(0, 0.15),
+        slidingBeginOffset: Offset(0.3, 0.0),
         fadingDuration: Duration(milliseconds: duration),
         child: Container(
           height: double.infinity,
           width: MediaQuery.of(context).size.width * 0.8,
-          margin: Default.getDefaultMargin(),
+          margin: EdgeInsets.all(context.watch<GoTheme>().margin),
           child: Builder(
             builder: (BuildContext context) {
               return Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: Default.getDefauilBorderRadius(),
+                    borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
                     child: ShaderMask(
                       shaderCallback: (Rect bounds) {
                         return LinearGradient(
@@ -105,7 +112,7 @@ class DisctionaryCard extends StatelessWidget {
                   ),
                   Center(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: Default.getDefaultPadding(onlyValue: true) * 2),
+                      margin: EdgeInsets.symmetric(horizontal: context.watch<GoTheme>().padding * 2),
                       child: Text(
                         label,
                         style: TextStyle(color: fontColor, fontSize: fontSize),

@@ -6,8 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../utils/variables/userdata.dart' as userdata;
-import '../../utils/default.dart';
+import '../../utils/gotheme.dart';
 import '../../utils/auth.dart';
+import 'package:provider/provider.dart';
 
 class RegistrationWidget extends StatefulWidget {
   @override
@@ -46,12 +47,12 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.all(Default.getDefaultMargin(onlyValue: true)),
+      margin: EdgeInsets.all(context.watch<GoTheme>().margin),
       height: 160,
       decoration: BoxDecoration(
-        boxShadow: Default.getDefaultBoxShadow(),
-        borderRadius: Default.getDefauilBorderRadius(),
-        color: Default.getDefaultSecondaryColor(),
+        boxShadow: context.watch<GoTheme>().boxShadow,
+        borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
+        color: context.watch<GoTheme>().secondaryColor,
       ),
       child: isAuthorized
           ? Container(
@@ -62,34 +63,37 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     child: IconButton(
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
-                      icon: Icon(Icons.logout, color: Default.getDefaultIconColor()),
+                      icon: Icon(Icons.logout, color: context.watch<GoTheme>().iconColor),
                       onPressed: () {
-                        showDialog(
+                        showCupertinoDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return Scaffold(
-                              body: CupertinoAlertDialog(
-                                title: Container(
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  child: Text('Выход'),
+                              body: Theme(
+                                data: context.watch<GoTheme>().isDarkTheme ? ThemeData.dark() : ThemeData.light(),
+                                child: CupertinoAlertDialog(
+                                  title: Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    child: Text('Выход'),
+                                  ),
+                                  content: Text("Вы уверены, что хотите выйти?"),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                      child: Text('Отмена'),
+                                      isDefaultAction: true,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    CupertinoDialogAction(
+                                      child: Text('Выйти', style: TextStyle(color: Colors.redAccent)),
+                                      onPressed: () {
+                                        signOutGoogle();
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
                                 ),
-                                content: Text("Вы уверены, что хотите выйти?"),
-                                actions: [
-                                  CupertinoDialogAction(
-                                    child: Text('Отмена'),
-                                    isDefaultAction: true,
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  CupertinoDialogAction(
-                                    child: Text('Выйти', style: TextStyle(color: Colors.redAccent)),
-                                    onPressed: () {
-                                      signOutGoogle();
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
                               ),
                             );
                           },
@@ -102,26 +106,26 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
                     delay: Duration(milliseconds: 200),
                     fadingDuration: Duration(milliseconds: 200),
                     child: Container(
-                      padding: Default.getDefaultPadding(),
+                      padding: EdgeInsets.all(context.watch<GoTheme>().padding),
                       child: Row(
                         children: <Widget>[
                           ClipRRect(child: userPhoto, borderRadius: BorderRadius.circular(72)),
-                          SizedBox(width: Default.getDefaultPadding(onlyValue: true)),
+                          SizedBox(width: context.watch<GoTheme>().padding),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 username,
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(color: context.watch<GoTheme>().textColor, fontSize: 16),
                                 overflow: TextOverflow.fade,
                               ),
-                              SizedBox(height: Default.getDefaultPadding(onlyValue: true) / 3),
+                              SizedBox(height: context.watch<GoTheme>().padding / 3),
                               Text(
                                 email,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Default.getDefaultSubtitleColor(),
+                                  color: context.watch<GoTheme>().subtitleColor,
                                 ),
                                 overflow: TextOverflow.fade,
                               ),
@@ -136,22 +140,26 @@ class _RegistrationWidgetState extends State<RegistrationWidget> {
             )
           : Container(
               child: InkWell(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  radius: Default.getDefauilBorderRadius(onlyValue: true),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SvgPicture.asset('./assets/icons/sad_face.svg'),
-                      SizedBox(height: 20),
-                      Text(
-                        'Вы не авторизованы. Нажмите, чтобы авторизоваться.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
-                  onTap: this.signInGoogle),
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+                radius: context.watch<GoTheme>().borderRadius,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SvgPicture.asset(
+                      './assets/icons/sad_face.svg',
+                      color: context.watch<GoTheme>().textColor,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Вы не авторизованы. Нажмите, чтобы авторизоваться.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: context.watch<GoTheme>().textColor),
+                    )
+                  ],
+                ),
+                onTap: this.signInGoogle,
+              ),
             ),
     );
   }

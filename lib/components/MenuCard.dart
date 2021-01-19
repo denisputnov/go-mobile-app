@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../utils/default.dart';
+import '../utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class MenuCard extends StatelessWidget {
   Color startColor;
@@ -16,17 +17,32 @@ class MenuCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
-      },
-      child: Hero(
-        tag: label,
-        child: Container(
-          margin: Default.getDefaultMargin(),
-          child: CardContent(
-              startColor: startColor, endColor: endColor, label: label, icon: icon, decorationIcon: decorationIcon),
-          decoration: BoxDecoration(
-            borderRadius: Default.getDefauilBorderRadius(),
+        Navigator.of(context).push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, anotrerAnimation) {
+              return destination;
+            },
+            transitionDuration: Duration(milliseconds: 300),
+            transitionsBuilder: (BuildContext context, Animation<double> animation,
+                Animation<double> secondaryAnimation, Widget child) {
+              animation = CurvedAnimation(curve: Curves.easeInOut, parent: animation);
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset(1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              );
+            },
           ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(context.watch<GoTheme>().margin),
+        child: CardContent(
+            startColor: startColor, endColor: endColor, label: label, icon: icon, decorationIcon: decorationIcon),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
         ),
       ),
     );
@@ -48,7 +64,7 @@ class CardContent extends StatelessWidget {
     return Scaffold(
       body: Container(
         // margin: Default.getDefaultMargin(),
-        padding: Default.getDefaultPadding(),
+        padding: EdgeInsets.all(context.watch<GoTheme>().padding),
         // height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -57,7 +73,8 @@ class CardContent extends StatelessWidget {
           children: <Widget>[
             Text(
               label,
-              style: Default.getDefaultTextStyle(),
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width / 20, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             Align(
               child: Image.asset(icon, width: 40, height: 40),
@@ -66,7 +83,7 @@ class CardContent extends StatelessWidget {
           ],
         ),
         decoration: BoxDecoration(
-          borderRadius: Default.getDefauilBorderRadius(),
+          borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
           gradient: LinearGradient(
             colors: [startColor, endColor],
             begin: Alignment.bottomRight,
@@ -78,6 +95,7 @@ class CardContent extends StatelessWidget {
             repeat: ImageRepeat.noRepeat,
             alignment: Alignment.center,
           ),
+          boxShadow: context.watch<GoTheme>().boxShadow,
         ),
       ),
     );

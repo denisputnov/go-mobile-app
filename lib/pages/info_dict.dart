@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:go/utils/default.dart';
+import 'package:go/utils/gotheme.dart';
 
 class InfoDict extends StatefulWidget {
   @override

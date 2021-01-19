@@ -1,22 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:go/utils/gotheme.dart';
-import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 
-class SettingsCategory extends StatelessWidget {
+class TextTitle extends StatelessWidget {
   String label;
 
-  SettingsCategory({this.label});
+  TextTitle(this.label);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+      margin: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(
           label,
           style: TextStyle(
-            fontSize: 24,
+            fontSize: MediaQuery.of(context).size.width / 20,
             fontWeight: FontWeight.w400,
             color: context.watch<GoTheme>().textColor,
           ),

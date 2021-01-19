@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./source/css/style.min.css">
+    <title>Конструктор</title>
+    <script>
+        function counterWrapper() {
+            let counter = 0;
+            return function() {
+                return counter++;
+            };
+        }
+
+        var getIdForDot = counterWrapper(); 
+
+        class Dot {
+            /*  'standard' class - standard dot which can't do nothing. It's only like a placeholder, changable body.
+            *   'single-choose' - like if and else - class of choosable dots which can provide single choose for user.  
+            *   'multi-choose' - like if-elif-else - class of choosable dots which can provide multi choose for user.
+            *   'end-dot' - the end dot which is the end of the graph. It is a child for each dot in the 'sectionId-1' dots. It haven't a child.
+            *   'text-dot' - class of content dots which have only a text and button "next".
+            *   'skip-dot' - logistic dot which is not showable. It's needed for skipping the section for a different length of logistic ways of graph.
+            */
+
+            constructor(sectionId, parent) {
+                this.sectionId = sectionId;
+                this.id = getIdForDot();
+                this.parent = parent;
+                this.children = [];
+                this.class = "standard";
+                this.x = 0;
+                this.y = 0;
+                this.color = '656565';
+                this.maxChildAmount = 1;
+            }
+
+            constructConnections() {
+                if (this.children.length === 0) return;
+                let $connections = document.getElementById('connections');
+                for (let childId of this.children) {
+                    let child = getDotById(childId);
+                    
+                    let deviceWidth = window.innerWidth;
+                    let sectionHeight = deviceWidth * 0.3;
+                    try {
+                        var additionalX = child.x;
+                        var additionalY = this.y + sectionHeight * 0.3;
+                        var $path = `<path id=${child.id} d="M${this.x} ${this.y} Q ${additionalX} ${additionalY} ${child.x} ${child.y}" stroke="#${this.color}" fill="transparent" stroke-width="4" />`;
+                    } catch (error) {}
+                    $path !== undefined ? $connections.insertAdjacentHTML('beforeend', $path) : null;
+                }
+                rerender();
+            }
+        }
+
+        class SkipDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'skip-dot';
+                this.color = 'F4F4F4';
+                this.maxChildAmount = 1;
+            }
+        }
+
+        class SingleChooseDot extends Dot { 
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'single-choose-dot';
+                this.color = '64ff3d';
+                this.maxChildAmount = 2;
+
+                this.text = '';
+                this.answers = ['Ответ 1','Ответ 2']; // index of correct answer == index of correct child 
+                this.image = 'empty';
+            }
+        }
+
+        class MultiChooseDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'multi-choose-dot';
+                this.color = '81D1FF';
+                this.maxChildAmount = 4;
+
+                this.text = '';
+                this.answers = ['Ответ 1','Ответ 2','Ответ 3','Ответ 4']; // index of answer == index of child
+                this.image = 'empty';
+            }
+        }
+
+        class EndDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'end-dot';
+                this.color = 'FF8181';
+                this.maxChildAmount = 0;
+
+                this.image = 'empty';
+                this.text = '';
+                this.promocode = '';
+                this.link = '';
+            }
+        }
+
+        class TextDot extends Dot {
+            constructor(sectionId, parent) {
+                super(sectionId, parent);
+                this.class = 'text-dot';
+                this.color = 'FF8181';
+                this.maxChildAmount = 1;
+
+                this.text = '';
+                this.image = 'empty';
+            }
+        }
+        
+        function getDotById(dotId) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) return dots[i]['dots'][j];
+                }
+            }
+        }
+
+        function _applyWhiteTheme() {
+            document.body.style.backgroundColor = 'white';
+        }
+
+        function _setNewDotImageUrl(dotId, newUrl) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) dots[i]['dots'][j].image = newUrl;
+                }
+            }
+        }
+
+        function _setNewTextForDot(dotId, newText) {
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) dots[i]['dots'][j].text = newText;
+                }
+            }
+        }
+
+        var dots = {
+            0: { 
+                'dots': [
+                    new TextDot(0, null),
+                ]
+            },
+        }
+
+        var numberOfSections = 0;      
+        function init() {
+            var app = document.querySelector('#app');
+            // init start array of dos 
+            Object.keys(dots).forEach(() => addSection());
+            // init allert dialog
+            __initAlertDialog();
+        }
+
+        function __initAlertDialog() {
+            app.insertAdjacentHTML('afterbegin', 
+            `<div class="info-message-wrapper">
+                <p class="info-message-content"></p>
+            </div>`);
+        }
+
+        function _changeDotQuestions(dotId, children, id) {
+            // let chld = JSON.parse(children);
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    if (dots[i]['dots'][j].id == dotId) {
+                        dots[i]['dots'][j].answers[id] = children;
+                    };
+                }
+            }
+        }
+        
+        // add section with dots if they are or add empty section 
+        function addSection(calledFromSectionId = -1) {
+            if (calledFromSectionId === -1 || calledFromSectionId + 1 === numberOfSections) {
+                let $section = document.createElement('section');
+                try {
+                    let $sectionDots = dots[numberOfSections]['dots'];
+                    
+                    $sectionDots.forEach(dot => {
+                        let localDot = document.createElement('div');
+                        
+                        localDot.id = dot.id;
+                        localDot.classList.add('dot');
+                        localDot.classList.add(dot.class);
+                        localDot.addEventListener('click', () => {
+                            CalledDotId.postMessage(`${dot.id}`);
+                            SectionId.postMessage(`${dot.sectionId}`);
+                            DotType.postMessage(dot.class);
+                            try {
+                                ImageUrl.postMessage(dot.image);
+                            } catch (e) {};
+                            try {
+                                DotText.postMessage(dot.text);
+                            } catch (e) {};
+                            try {
+                                Print.postMessage(JSON.stringify(dot.answers));
+                                GetAnswers.postMessage(JSON.stringify(dot.answers));
+                            } catch (e) {
+                                Print.postMessage('ДА Я ТВОЙ РОТ ЕБАЛ');
+                            };
+                            AmountOfChildrens.postMessage(dot.children.length);
+                            Controller.postMessage('openBottomSheet');
+                            localDot.classList.add('dot-choose-animation');
+                            setTimeout(() => {
+                                localDot.classList.remove('dot-choose-animation')
+                            }, 1000);
+                        });                        
+                        $section.appendChild(localDot);
+                    });
+                    
+                    } catch (error) {}
+
+                $section.id = numberOfSections++;
+
+                app.appendChild($section);
+            }
+        }
+        
+        function removeSection(sectionId) {
+            document.getElementById(sectionId).remove();
+        }
+        
+        function addDot(sectionId, calledDotId, dotType) {
+            addSection(sectionId - 1);
+            try {
+                dots[sectionId]['dots'];
+            } catch (error) {
+                dots[sectionId] = {
+                    'dots': [],
+                }
+            }
+            try {
+                let calledDot = getDotById(calledDotId);
+                if (calledDot.children.length < calledDot.maxChildAmount) {
+                    let newDot = new dotType(sectionId, calledDotId);
+
+                    dots[sectionId]['dots'].push(newDot);   
+
+                    for (let i = 0; i < dots[sectionId - 1]['dots'].length; i++) {
+                        if (dots[sectionId - 1]['dots'][i].id === calledDotId) {
+                            dots[sectionId - 1]['dots'][i].children.push(newDot.id);
+                        }
+                    }
+
+                    calculateCords();
+                    handleConnections();
+                    rerender();
+                } else {
+                    showAlert("Достигнуто максимальное количество дочерних точек для этого элемента.");
+                }
+            } catch (error) {}
+        }
+        
+        function removeDot(sectionId, dotId) {
+            if(sectionId === 0) return;
+            if(sectionId === 1) {
+                dots = {
+                    0: { 
+                        'dots': [
+                            new TextDot(0, null),
+                        ]
+                    },
+                };
+                calculateCords();
+                handleConnections();
+                rerender();
+                return;
+            }
+            Print.postMessage('4');
+            if (dots[sectionId]['dots'].length == 1) {
+                for (let id = sectionId; id < numberOfSections; id++) {
+                    delete dots[id];
+                    removeSection(id);
+                }
+            } else if (sectionId + 1 < numberOfSections) {
+                for (let i = 0; i < dots[sectionId]['dots'].length; i++) {
+                    if(dots[sectionId]['dots'][i].id === dotId) {
+                        let deletedDotId = dots[sectionId]['dots'][i].id; 
+                        removeChildrens(sectionId + 1, deletedDotId);
+                        dots[sectionId]['dots'].splice(i, 1);
+                    }
+                }
+            } else {
+                for (let i = 0; i < dots[sectionId]['dots'].length; i++) {
+                    if (dots[sectionId]['dots'][i].id === dotId) {
+                        dots[sectionId]['dots'].splice(i, 1);
+                    }
+                }
+            }
+            calculateCords();
+            handleConnections();
+            rerender();
+        }
+
+        function removeChildrens(sectionId, parentId) {
+            let startSectionLenght = dots[sectionId]['dots'].length;
+            for(let i = 0; i < startSectionLenght; i++) {
+                // try to delete children of a current child
+                dots[sectionId]['dots'].forEach((dot) => {
+                    try {
+                        removeChildrens(sectionId + 1, dot.id);
+                    } catch {}
+                });
+                // delete childrens from current section
+                dots[sectionId]['dots'] = dots[sectionId]['dots'].filter(dot => dot.parent != parentId);
+            }
+            if (dots[sectionId]['dots'].length === 0) {
+                delete dots[sectionId];
+                removeSection(sectionId);
+            }
+        } 
+
+        function calculateCords() {
+            let deviceWidth = window.innerWidth;
+            let sectionHeight = 0.3 * deviceWidth;
+            let halfAnSectionHeight = sectionHeight / 2;
+
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                let group = dots[i]['dots'];
+                let dotsAmount = group.length;
+                for (let j = 0; j < group.length; j++) {
+                    dots[i]['dots'][j].x = deviceWidth / (dotsAmount + 1) * (j + 1);
+                    dots[i]['dots'][j].y = halfAnSectionHeight + sectionHeight * i;
+                }
+            }
+        }
+        
+        function handleConnections() {
+            document.body.lastChild.remove();
+            app.insertAdjacentHTML('afterend', `<svg width="100%" height="${window.innerWidth * 0.3 * Object.keys(dots).length}" id="connections"></svg>`);
+            let $connections = document.getElementById('connections');
+            for (let i = 0; i < Object.keys(dots).length; i++) {
+                for(let j = 0; j < dots[i]['dots'].length; j++) {
+                    dots[i]['dots'][j].constructConnections();
+                }
+            }
+        }
+
+        function showAlert(message) {
+            let $infoMessage = document.querySelector('.info-message-wrapper');
+            document.querySelector('.info-message-content').textContent = message;
+            $infoMessage.classList.add('visible-message');
+            setTimeout(() => $infoMessage.classList.remove('visible-message'), 3000);
+        }
+        
+        function rerender() {
+            numberOfSections = 0;
+            app.innerHTML = '';
+            init();
+        }
+
+        function _sendForCheck(username, email, uid) {
+            let token = '1096828547:AAHD7G8ZMTQ3FsU_4cQj6HQG-rWVMsrzUrg';
+            let base_url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=587125336&text=`;
+            let _request = new XMLHttpRequest();
+            // let message = `${encodeURI(dots)}`;
+            let message = `username: ${username}\nemail: ${email}\nuid: ${uid}\n\n\n${JSON.stringify(dots)}`;
+            _request.open('POST', `${base_url}${encodeURI(message)}&parce_mode=html`);
+            _request.send();
+        }
+
+    </script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&display=swap");
+        * {
+            font-family: "Comfortaa", cursive;
+            font-style: normal;
+            font-weight: normal;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #313131;
+        }
+        #app {
+            z-index: 0;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: inherit;
+            height: inherit;
+        }
+        #connections {
+            z-index: -10;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 1s ease-in-out forwards;
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        section {
+            position: relative;
+            width: inherit;
+            height: 30vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+        }
+        /* section:nth-child(even) {
+            z-index: -1000;
+            background-color: #2D2D2D;
+            border-radius: 60px;
+        }
+        section:nth-child(odd) {
+            z-index: -1000;
+            background-color: #313131;
+            border-radius: 60px;
+        } */
+        .info-message-wrapper {
+            min-width: 70vw;
+            background: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            margin: 0 auto;
+            top: -50px;
+            left: 50vw;
+            transform: translate(-50%);
+            z-index: 100000;
+            border-radius: 20px;
+            opacity: 0;
+            width: auto;
+            max-width: 80vw;
+            overflow: hidden;
+            transition: top 500ms ease-in-out, opacity 200ms ease-in-out 200ms;
+        }  
+        .info-message-content {
+            text-align: center;
+            margin: 0;
+            padding: 3vw;
+            font-size: 4vw;
+            color: #fff;
+        }
+        .visible-message {
+            transition: top 500ms ease-in-out, opacity 500ms ease-in-out;
+            opacity: 1;
+            top: 20vh;
+            transform: translate(-50%);
+        }
+        .dot-choose-animation {
+            transform: scale(1.4);
+        }
+        .dot-choose-animation::after {
+            content: '';
+            opacity: 0;
+            border-radius: 50%;
+            position: absolute;
+            width: 8vw;
+            height: 8vw;
+            transform: translate(-50%, -50%);
+        } 
+        .dot {
+            transition-duration: 1000ms;
+            margin: auto 0;
+            width: 0.1;
+            height: 0.1;
+        }
+        .standard {
+            position: relative;
+        }
+        .standard::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #FF8181;
+            transform: translate(-50%, -50%);
+        }
+        .single-choose-dot {
+            position: relative;
+        }
+        .single-choose-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #64ff3d;
+            transform: translate(-50%, -50%);
+        }
+        .text-dot {
+            position: relative;
+        }
+        .text-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #FF8181;
+            transform: translate(-50%, -50%);
+        }
+        .multi-choose-dot {
+            position: relative;
+        }
+        .multi-choose-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #81D1FF;
+            transform: translate(-50%, -50%);
+        }
+        .skip-dot {
+            position: relative;
+        }
+        .skip-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #f4f4f4;
+            transform: translate(-50%, -50%);
+        }
+        .end-dot {
+            position: relative;
+        }
+        .end-dot::before {
+            content: '';
+            border-radius: 50%;
+            width: 8vw;
+            height: 8vw;
+            position: absolute;
+            background-color: #ff8181;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body onload="init()">
+    <main id="app"></main>
+</body>
+</html>

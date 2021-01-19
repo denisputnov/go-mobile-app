@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go/pages/suggest.dart';
+import 'package:go/components/games/Suggest.dart';
+import 'package:provider/provider.dart';
 
 class GamesAppBar extends StatelessWidget {
   @override

@@ -1,50 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:go/utils/default.dart';
-
+import 'package:go/utils/gotheme.dart';
+import 'package:provider/provider.dart';
 
 class GameCard extends StatelessWidget {
-  String image = './assets/icons/coffe.png';
-  Color startColor = Color(0xffC28456);
-  Color endColor = Colors.white.withOpacity(0);
-  double startGradientPos = 0;
-  double endGradientPos = 1;
+  dynamic image;
+  Color startColor;
+  Color endColor;
+  double startGradientPos;
+  double endGradientPos;
 
-  Color contentColor = Colors.white;
-  String category = "Подпишись в соцсетях";
-  double categoryFontSize = 14;
-  IconData icon = Icons.settings;
-  String title = 'Кофе "Coffies co скидкой 10%"';
-  double titleFontSize = 30;
+  Color contentColor;
+  String category;
+  double categoryFontSize;
+  IconData icon;
+  String title;
+  double titleFontSize;
 
-  bool isBoldTitle = false;
+  bool isBoldTitle;
 
   Widget destination;
 
-  // GameCard({number});
+  GameCard(
+      {this.image,
+      this.startColor,
+      this.endColor,
+      this.startGradientPos,
+      this.endGradientPos,
+      this.contentColor,
+      this.category,
+      this.categoryFontSize = 14,
+      this.icon,
+      this.title,
+      this.titleFontSize = 30,
+      this.isBoldTitle = true,
+      this.destination});
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    double cardWidth = screenWidth - Default.getDefaultMargin(onlyValue: true) * 2;
+    double cardWidth = screenWidth - context.watch<GoTheme>().margin * 2;
     double cardHeight = cardWidth * 9 / 16;
 
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
+        if (destination != null) Navigator.push(context, MaterialPageRoute(builder: (context) => destination));
       },
       child: Container(
         decoration: BoxDecoration(
           color: startColor,
-          borderRadius: Default.getDefauilBorderRadius(),
+          borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
+          boxShadow: context.watch<GoTheme>().boxShadow,
         ),
-        margin: Default.getDefaultMargin(),
+        margin: EdgeInsets.all(context.watch<GoTheme>().margin),
         width: cardWidth,
         height: cardHeight,
         child: Stack(
           children: [
             ClipRRect(
-              borderRadius: Default.getDefauilBorderRadius(),
+              borderRadius: BorderRadius.circular(context.watch<GoTheme>().borderRadius),
               child: ShaderMask(
                 shaderCallback: (Rect bounds) {
                   return LinearGradient(
@@ -55,17 +69,19 @@ class GameCard extends StatelessWidget {
                       .createShader(bounds);
                 },
                 blendMode: BlendMode.srcATop,
-                child: Image.asset(
-                  image,
-                  repeat: ImageRepeat.noRepeat,
-                  fit: BoxFit.cover,
-                  width: cardWidth,
-                  height: cardHeight,
-                ),
+                child: image is Image
+                    ? image
+                    : Image.network(
+                        image,
+                        repeat: ImageRepeat.noRepeat,
+                        fit: BoxFit.cover,
+                        width: cardWidth,
+                        height: cardHeight,
+                      ),
               ),
             ),
             Container(
-              padding: Default.getDefaultPadding(),
+              padding: EdgeInsets.all(context.watch<GoTheme>().padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -78,9 +94,10 @@ class GameCard extends StatelessWidget {
                       child: Text(
                         title,
                         style: TextStyle(
-                            fontSize: titleFontSize,
-                            color: contentColor,
-                            fontWeight: isBoldTitle ? FontWeight.w600 : FontWeight.normal),
+                          fontSize: titleFontSize,
+                          color: contentColor,
+                          fontWeight: isBoldTitle ? FontWeight.w600 : FontWeight.normal,
+                        ),
                       ),
                     ),
                   )
@@ -93,4 +110,3 @@ class GameCard extends StatelessWidget {
     );
   }
 }
-
